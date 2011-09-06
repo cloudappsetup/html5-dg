@@ -2,6 +2,8 @@
 
 var session;
 
+var dg = new PAYPAL.apps.DGFlow({});
+
 // CONNECT 
 $.extend({
 	connect : function(args, callbackFnk){
@@ -43,7 +45,6 @@ $.extend({
 });
 
 
-var dg = new PAYPAL.apps.DGFlow({});
 				
 
 // GENERATE BUTTON
@@ -56,19 +57,22 @@ $.extend({
 		
 		var args = {'url':'/html5-dg/server/coldfusion/connect.cfc','data':'method=setExpressCheckout'};
 			$.setExpressCheckout(args, function(data){
-				// assign connection data to global session var
-				console.log(data);
-				/*
-				var buttonData = "<a href='" + data.redirecturl  +"' id='" + currSession.buttonId +"'><img src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif' border='0' /></a>";
-		
-		
-				$(currTarget).html(buttonData);
-				*/
+				// assign redirect url with token
 				console.log(data.redirecturl);
 				dg.startFlow(data.redirecturl);
 				
 				
+				//This CODE is for using a DIV to display button not canvas.  Currently not used
+				/*
+				var buttonData = "<a href='" + data.redirecturl  +"' id='" + currSession.buttonId +"'><img src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif' border='0' /></a>";
+				$(currTarget).html(buttonData);
+				*/
+				
+				
 			});
+			
+			
+			// This CODE is for using a DIV to display button not canvas.  Currently not used
 			/*
 		var buttonData = "<a href='http://www.google.com' id='" + currSession.buttonId +"'><img src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif' border='0' /></a>";
 		
@@ -93,33 +97,6 @@ $.extend({
 		*/
 	}
 });
-
-var loadCancelUrl = true;
-function MyEmbeddedFlow(dg) {
-	console.log('embededflow');
-              this.embeddedPPObj = dg;
-              this.paymentSuccess = function () {
-				  console.log('payment success');
-                   this.embeddedPPObj.closeFlow();
-                   // handle payment success here
-                   //  - redirect to a success page (or)
-                   //  - show another div confirming the payment (or)
-                   //  - display a popup confirming the payment
-                   // NOTE: the line below redirects to a success page
-                  // window.location.href = get_full_url('/success.html');
-              };
-              this.paymentCanceled = function () {
-                   this.embeddedPPObj.closeFlow();
-                   // handle payment cancellation here
-                   //  - redirect to a cancel page (or)
-                   //  - show another div messaging that payment was canceled (or)
-                   //  - display a popup to retry payment again
-                   // NOTE: the line below redirects to a cancellation page
-                   window.location.href = get_full_url('/canceled.html');
-              };
-         
-     }
-      var myEmbeddedPaymentFlow = new MyEmbeddedFlow(dg);
 
 // SETEXPRESSCHECKOUT
 $.extend({
@@ -153,9 +130,7 @@ $(document).ready(function() {
 		});
 	});
 	
-	$('#dispatch').click(function() {
-		console.log(session);
-	});
+
 	
 	
 	$('#createButton').click(function() {	
@@ -176,10 +151,6 @@ $(document).ready(function() {
 		
 	});
 	
-	$('#clearButton').click(function() {	
-
- 		releaseDG();
-	});
 	
 });
 
