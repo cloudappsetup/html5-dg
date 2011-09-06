@@ -1,0 +1,192 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jQuery HTML 5 Web App</title>
+<script src="js/jquery-1.6.2.min.js" type="text/javascript"></script>
+
+<script>
+
+var session;
+
+
+// CONNECT 
+$.extend({
+	connect : function(args, callbackFnk){
+		var currURL = args.url;
+		var currData = args.data;
+		$.ajax({
+			url: currURL,
+			data: currData,
+			success: function(data){
+				var obj = $.parseJSON(data);
+				
+				if(typeof callbackFnk == 'function'){
+					callbackFnk.call(this, obj);
+				}
+			}
+		});	
+	}
+});
+
+
+// BUTTONCREATE
+$.extend({
+	createButton : function(args, callbackFnk){
+		var currURL = args.url;
+		var currData = args.data;
+		$.ajax({
+			url: currURL,
+			data: currData,
+			success: function(data){
+				var obj = $.parseJSON(data);
+				
+				if(typeof callbackFnk == 'function'){
+					callbackFnk.call(this, obj);
+				}
+			}
+		});	
+	}
+	
+});
+
+
+
+// GENERATE BUTTON
+$.extend({
+	generateButton : function(args){
+		var currURL = args.url;
+		var currData = args.data;
+		var currSession = args.session;
+		var currTarget = args.target;
+		var buttonData = "<img id='" + currSession.buttonId +"' src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif'>";
+		
+		$(currTarget).html(buttonData);
+		
+		$('#' +  currSession.buttonId).live('click', function() {	
+			//alert('Set Express Checkout ' +  currSession.buttonId);
+			var args = {'url':'http://localhost/html5dg/connect.cfc','data':'method=setExpressCheckout'};
+			$.setExpressCheckout(args, function(data){
+				// assign connection data to global session var
+				console.log(data);
+			});
+		});
+	}
+});
+
+// SETEXPRESSCHECKOUT
+$.extend({
+	setExpressCheckout : function(args, callbackFnk){
+		var currURL = args.url;
+		var currData = args.data;
+		$.ajax({
+			url: currURL,
+			data: currData,
+			success: function(data){
+				var obj = $.parseJSON(data);
+				
+				if(typeof callbackFnk == 'function'){
+					callbackFnk.call(this, obj);
+				}
+			}
+		});	
+	}
+});
+
+
+
+
+$(document).ready(function() {
+	
+	$('#connect').click(function() {	
+		var args = {'url':'http://localhost/html5dg/connect.cfc','data':'method=connect'};
+		$.connect(args, function(data){
+			// assign connection data to global session var
+			session = data;
+		});
+	});
+	
+	$('#dispatch').click(function() {
+		console.log(session);
+	});
+	
+	
+	$('#createButton').click(function() {	
+
+		var args = {'url':'http://localhost/html5dg/connect.cfc','data':'method=createButton','target':'#MyButtonTarget','session':session};
+		$.createButton(args, function(data){
+			
+			console.log(data);
+			var args = {'url':'http://localhost/html5dg/connect.cfc','data':'method=createButton','target':'#MyButtonTarget','session':data};
+			$.generateButton(args, function(data){
+				console.log(data);
+			});
+		});
+		
+	});
+	
+	
+	
+	/*
+	$('#read').click(function() {
+			
+		//console.log($('.pp_payrequest').toArray());
+		//console.log(JSON.stringify($('#pp_payrequest *').serializeArray()));
+	
+		var ppArray = new Array();
+		$.each($('.pp_payrequest').children(), function(index, value){ 
+		
+			if($(this).attr('class'))
+			{
+		
+				if($(this).attr('class').indexOf('pp_') >= 0)
+				{
+		
+					if($(this).filter(':input').length > 0)
+					{
+						tempValue = $(this).val();
+					} else {
+						tempValue = $(this).html();
+					}
+					
+					tempArray = {"name":$(this).attr('class'),"value":tempValue};
+					ppArray.push(tempArray);	
+				}
+			
+			}
+			
+         });
+		 
+	});
+	*/
+});
+
+</script>
+</head> 
+<body> 
+
+<button  id="connect">Connect</button>
+<br>
+<button id="dispatch">Display Session Obj in Console</button>
+<br/>
+<button id="createButton">Create Button</button>
+
+<div id="MyButtonTarget"></div>
+
+	
+    
+   <!--
+   <form class="pp_payrequest">
+	<div class="pp_payrequest_category">Digital</div>
+	<div class="pp_payrequest_name">Mega Sheilds</div>
+    <div class="pp_payrequest_number">1234</div>
+    <label>Quantity</label>
+	<input  class="pp_payrequest_qty" value="1"  />
+    <div class="pp_payrequest_taxamt">0</div>
+    <div class="pp_payrequest_amt">.99</div>
+    <div class="pp_payrequest_desc">Download</div>
+</form>
+-->
+
+</body>
+</html>
