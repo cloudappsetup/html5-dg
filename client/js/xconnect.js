@@ -10,7 +10,9 @@ target = the id of the dom element you are targeting.
 targetType = either canvas or div
 */
 
-function xconnection(url, data, target) {
+
+
+xconnection = function(url, data, target) {
 	this.setUrl = function(newUrl) { url = newUrl; };
     this.getUrl = function() { return url; };
 	this.setData = function(newData) { data = newData; };
@@ -26,6 +28,52 @@ function xconnection(url, data, target) {
 	this.getState = function() { return state; }; 
 	this.setWebToken = function(newWebToken) { webToken = newWebToken; };
 	this.getWebToken = function() { return webToken; };
+	
+	
+	xbutton = function(x, y,height,width, frameColor) {
+		var setX = function(newX) { x = newX; };
+		var getX = function() { return x; };
+		var setY = function(newY) { y = newY; };
+		var getY = function() { return y; };
+		
+		var setHeight = function(newHeight) { height = newHeight; };
+		var getHeight = function() { return height; };
+		var setWidth = function(newWidth) { width = newWidth; };
+		var getWidth = function() { return width; };
+		 
+		var setFrameColor = function(newFrameColor) { frameColor = newFrameColor; };
+		var getFrameColor = function() { return frameColor; };  
+		
+	
+		xButtonDisplay = function(){
+			var FRAME_COLOR_WHITE = "rgb(255, 255, 255)";
+			var canvas = $("#mainCanvas").get(0);
+			canvasContext = canvas.getContext('2d');
+			
+			myContainer.x = 350;
+			myContainer.y = 250;
+			myContainer.width = 180;
+			myContainer.height = 100;
+			myContainer.rgb = FRAME_COLOR_WHITE;
+			drawButton(myContainer);
+			
+			var x = this.getX();
+			var y = this.getY();
+			var h = this.getHeight();
+			var w = this.getWidth();
+			console.log(x);
+			var myButton = new Object();
+			buttonObj.src = "https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif";
+			
+			buttonObj.onload = function(e) {
+				
+				canvasContext.drawImage(buttonObj, 375,300, 130, 30);
+			};
+			
+			
+			return true; };
+	};
+	
 }
 
 // CONNECT 
@@ -113,10 +161,36 @@ var buttonObj = new Image();
 var mouseX = 0;
 var mouseY = 0;
 var backgroundImage = new Image();
-var BUTTON_COLOR_DARK = "rgb(0, 0, 255)";
-var BUTTON_COLOR_LIGHT = "rgb(0, 0, 128)";
-var FRAME_COLOR_WHITE = "rgb(255, 255, 255)";
+var FRAME_COLOR_DARK_BLUE = "rgb(0, 0, 255)";
+var FRAME_COLOR_LIGHT_BLUE = "rgb(0, 0, 128)";
 
+
+
+/*
+function xButtonDisplay(x,y,h,w) {
+
+	// Offer Container area
+	myContainer.x = 350;
+	myContainer.y = 250;
+	myContainer.width = 180;
+	myContainer.height = 100;
+	myContainer.rgb = FRAME_COLOR_WHITE;
+	drawButton(myContainer);
+	
+	// Hit Area 
+	myButton.x = 375;
+	myButton.y = 300;
+	myButton.width = 130;
+	myButton.height = 30;
+	//myButton.rgb = BUTTON_COLOR_LIGHT;
+	drawButton(myButton);
+	
+	buttonObj.src = "https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif";
+	buttonObj.onload = function() {
+		canvasContext.drawImage(buttonObj, 375,300, 130, 30);
+	};
+}
+*/
 
 function showBuyButton() {
 	// Offer Container area
@@ -129,9 +203,9 @@ function showBuyButton() {
 	
 	// Hit Area 
 	myButton.x = 375;
-	myButton.y = 295;
+	myButton.y = 300;
 	myButton.width = 130;
-	myButton.height = 40;
+	myButton.height = 30;
 	//myButton.rgb = BUTTON_COLOR_LIGHT;
 	drawButton(myButton);
 	
@@ -167,6 +241,7 @@ $(function() {
 	$('#connect').click(function() {	
 		$.connect(function(data){
 			xconn.connectResult(data);
+			console.log(testButton.xButtonDisplay()  );
 		});
 	});
 	
@@ -213,4 +288,8 @@ $(function() {
 
 
 var xconn = new xconnection('/html5-dg/server/coldfusion/connect.cfc','method=connect','mainCanvas');
+var testButton = new xconn.xbutton(375,300,120,30);
+
+
+
 
