@@ -1,17 +1,39 @@
 // JavaScript Document
 
-var session;
-
 var dg = new PAYPAL.apps.DGFlow({});
+
+/*
+connection(url,data)
+url = the server side connection script
+data = the query string to call method or pass variables.
+target = the id of the dom element you are targeting.
+targetType = either canvas or div
+*/
+
+function xconnection(url, data, target) {
+	this.setUrl = function(newUrl) { url = newUrl; };
+    this.getUrl = function() { return url; };
+	this.setData = function(newData) { data = newData; };
+	this.getData = function() { return data; }; 
+	this.setTarget = function(newTarget) { target = newTarget; };
+	this.getTarget = function() { return target; }; 
+	
+	this.connectResult = function(newConnData){
+		this.setState(newConnData.state);
+		this.setWebToken(newConnData.webToken);
+	}; 
+	this.setState = function(newState) { state = newState; };
+	this.getState = function() { return state; }; 
+	this.setWebToken = function(newWebToken) { webToken = newWebToken; };
+	this.getWebToken = function() { return webToken; };
+}
 
 // CONNECT 
 $.extend({
-	connect : function(args, callbackFnk){
-		var currURL = args.url;
-		var currData = args.data;
+	connect : function(callbackFnk){
 		$.ajax({
-			url: currURL,
-			data: currData,
+			url: xconn.getUrl(),
+			data: xconn.getData(),
 			success: function(data){
 				var obj = $.parseJSON(data);
 				
@@ -26,12 +48,10 @@ $.extend({
 
 // BUTTONCREATE
 $.extend({
-	createButton : function(args, callbackFnk){
-		var currURL = args.url;
-		var currData = args.data;
+	createButton : function(callbackFnk){
 		$.ajax({
-			url: currURL,
-			data: currData,
+			url: xconn.getUrl(),
+			data: xconn.getData(),
 			success: function(data){
 				var obj = $.parseJSON(data);
 				
@@ -44,68 +64,13 @@ $.extend({
 	
 });
 
-
-				
-
-// GENERATE BUTTON
-$.extend({
-	generateButton : function(args){
-		var currURL = args.url;
-		var currData = args.data;
-		var currSession = args.session;
-		var currTarget = args.target;
-		
-		var args = {'url':'/html5-dg/server/coldfusion/connect.cfc','data':'method=setExpressCheckout'};
-			$.setExpressCheckout(args, function(data){
-				// assign redirect url with token
-				console.log(data.redirecturl);
-				dg.startFlow(data.redirecturl);
-				
-				
-				//This CODE is for using a DIV to display button not canvas.  Currently not used
-				/*
-				var buttonData = "<a href='" + data.redirecturl  +"' id='" + currSession.buttonId +"'><img src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif' border='0' /></a>";
-				$(currTarget).html(buttonData);
-				*/
-				
-				
-			});
-			
-			
-			// This CODE is for using a DIV to display button not canvas.  Currently not used
-			/*
-		var buttonData = "<a href='http://www.google.com' id='" + currSession.buttonId +"'><img src='https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif' border='0' /></a>";
-		
-		
-		$(currTarget).html(buttonData);
-		
-		var dg = new PAYPAL.apps.DGFlow({
-		// the HTML ID of the form submit button which calls setEC
-			trigger: currSession.buttonId
-		});
-		*/
-		
-		/*
-		$('#' +  currSession.buttonId).live('click', function() {	
-			//alert('Set Express Checkout ' +  currSession.buttonId);
-			var args = {'url':'/html5-dg/connect.cfc','data':'method=setExpressCheckout'};
-			$.setExpressCheckout(args, function(data){
-				// assign connection data to global session var
-				console.log(data);
-			});
-		});
-		*/
-	}
-});
 
 // SETEXPRESSCHECKOUT
 $.extend({
-	setExpressCheckout : function(args, callbackFnk){
-		var currURL = args.url;
-		var currData = args.data;
+	setExpressCheckout : function(callbackFnk){
 		$.ajax({
-			url: currURL,
-			data: currData,
+			url: xconn.getUrl(),
+			data: xconn.getData(),
 			success: function(data){
 				var obj = $.parseJSON(data);
 				
@@ -119,40 +84,6 @@ $.extend({
 
 
 
-
-$(document).ready(function() {
-	
-	$('#connect').click(function() {	
-		var args = {'url':'/html5-dg/server/coldfusion/connect.cfc','data':'method=connect'};
-		$.connect(args, function(data){
-			// assign connection data to global session var
-			session = data;
-		});
-	});
-	
-
-	
-	
-	$('#createButton').click(function() {	
-
-		var args = {'url':'/html5-dg/server/coldfusion/connect.cfc','data':'method=createButton','target':'#MyButtonTarget','session':session};
-		$.createButton(args, function(data){
-			
-			console.log(data);
-			var args = {'url':'/html5-dg/server/coldfusion/connect.cfc','data':'method=createButton','target':'#MyButtonTarget','session':data};
-			
-			showBuyButton();
-			
-			/*$.generateButton(args, function(data){
-				console.log(data);
-			});
-			*/
-		});
-		
-	});
-	
-	
-});
 
 function releaseDG() {
 	
@@ -232,32 +163,43 @@ function checkIfInsideButtonCoordinates(buttonObj, mouseX, mouseY)
 
 
 $(function() {
+	
+	$('#connect').click(function() {	
+		$.connect(function(data){
+			xconn.connectResult(data);
+		});
+	});
+	
+	$('#createButton').click(function() {	
+		xconn.setData('method=createButton');
+		$.createButton(function(data){
+		
+			xconn.connectResult(data);
+			showBuyButton();
+		});
+	});
+	
 
-	$("#mainCanvas").click(function(eventObject) {
+	$("#" + xconn.getTarget()).click(function(eventObject) {
+		
 		mouseX = eventObject.pageX - this.offsetLeft;
 		mouseY = eventObject.pageY - this.offsetTop;
 
 		if(checkIfInsideButtonCoordinates(myButton, mouseX, mouseY))
 		{
+			//console.log('hit area');
 			
-			console.log('hit area');
-			
-			var args = {
-				'url':'/html5-dg/server/coldfusion/connect.cfc',
-				'data':'method=createButton',
-				'target':'#MyButtonTarget',
-				'session':''};
-
-		
-				$.generateButton(args, function(data){
-					console.log(data);
-				});
-		
+			xconn.setData('method=setExpressCheckout');
+			$.setExpressCheckout(function(data){
+				console.log(data.redirecturl);
+				dg.startFlow(data.redirecturl);
+			});
 		}
 	});
 
 
 	// Debug code for XY position of mouse remove later
+	/*
 	$("#mainCanvas").mousemove(function(eventObject) {
 		mouseX = eventObject.pageX - this.offsetLeft;
 		mouseY = eventObject.pageY - this.offsetTop;
@@ -265,5 +207,10 @@ $(function() {
 		$("#mouseXYSpan").html("X: " + mouseX + "   Y: " + mouseY);
 		
 	});
+	*/
 });
+
+
+
+var xconn = new xconnection('/html5-dg/server/coldfusion/connect.cfc','method=connect','mainCanvas');
 
