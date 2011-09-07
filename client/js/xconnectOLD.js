@@ -12,89 +12,41 @@ targetType = either canvas or div
 
 
 
-var xconnection = function(url, data, target) {
-	var url, data, target, state, webToken;
-	var xbutton = {x : "",
-	               y : "",
-				   height : "",
-				   width : "",
-				   frameColor : ""};
+xconnection = function(url, data, target) {
+	this.setUrl = function(newUrl) { url = newUrl; };
+    this.getUrl = function() { return url; };
+	this.setData = function(newData) { data = newData; };
+	this.getData = function() { return data; }; 
+	this.setTarget = function(newTarget) { target = newTarget; };
+	this.getTarget = function() { return target; }; 
 	
-	return{
-		init: function(url, data, target){
-			this.url = url;
-			this.data = data;
-			this.target = target;
-		},
-		
-		setUrl: function(newUrl) { this.url = newUrl; },
-		getUrl: function() { return this.url; },
-		setData: function(newData) { this.data = newData; },
-		getData: function() { return this.data; },
-		setTarget: function(newTarget) { this.target = newTarget; },
-		getTarget: function() { return this.target; },
-		
-		connectResult: function(newConnData){
-			setState(newConnData.state);
-			setWebToken(newConnData.webToken);
-		},
-		setState: function(newState) { state = newState; },
-		getState: function() { return state; },
-		setWebToken: function(newWebToken) { webToken = newWebToken; },
-		getWebToken: function() { return webToken; },
-		
-		xbutton: function(x, y, height, width, frameColor) {
-			this.xbutton.x = x;
-			this.xbutton.y = y;
-			this.xbutton.height = height;
-			this.xbutton.width = width;
-			this.xbutton.frameColor = frameColor;
-		},
-		
-		setX: function(newX) { this.xbutton.x = newX; },
-		getX: function() { return this.xbutton.x; },
-		setY: function(newY) { this.xbutton.y = newY; },
-		getY: function() { return this.xbutton.y; },
-			
-		setHeight: function(newHeight) { this.xbutton.height = newHeight; },
-		getHeight: function() { return this.xbutton.height; },
-		setWidth: function(newWidth) { this.xbutton.width = newWidth; },
-		getWidth: function() { return this.xbutton.width; },
-			 
-		setFrameColor: function(newFrameColor) { this.xbutton.frameColor = newFrameColor; },
-		getFrameColor: function() { return this.xbutton.frameColor; },  
-		
-		xButtonDisplay: function(){
-			var FRAME_COLOR_WHITE = "rgb(255, 255, 255)";
-			var canvas = $("#mainCanvas").get(0);
-			canvasContext = canvas.getContext('2d');
-				
-			myContainer.x = 350;
-			myContainer.y = 250;
-			myContainer.width = 180;
-			myContainer.height = 100;
-			myContainer.rgb = FRAME_COLOR_WHITE;
-			drawButton(myContainer);
-				
-			var x = xconnection.getX();
-			var y = xconnection.getY();
-			var h = xconnection.getHeight();
-			var w = xconnection.getWidth();
-			console.log(x);
-			var myButton = new Object();
-			buttonObj.src = "https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif";
-				
-			buttonObj.onload = function(e) {
-					
-				canvasContext.drawImage(buttonObj, x,y, h, w);
-			};
-				
-				
-			return true;
-		}
-	}
+	this.connectResult = function(newConnData){
+		this.setState(newConnData.state);
+		this.setWebToken(newConnData.webToken);
+	}; 
+	this.setState = function(newState) { state = newState; };
+	this.getState = function() { return state; }; 
+	this.setWebToken = function(newWebToken) { webToken = newWebToken; };
+	this.getWebToken = function() { return webToken; };
 	
-}();
+	
+	this.xbutton = function(x, y,height,width) {
+		var setX = function(newX) { x = newX; };
+		var getX = function() { return x; };
+		var setY = function(newY) { y = newY; };
+		var getY = function() { return y; };
+		
+		var setHeight = function(newHeight) { height = newHeight; };
+		var getHeight = function() { return height; };
+		var setWidth = function(newWidth) { width = newWidth; };
+		var getWidth = function() { return width; };
+		 
+		var setFrameColor = function(newFrameColor) { frameColor = newFrameColor; };
+		var getFrameColor = function() { return frameColor; };  
+		
+	};
+	
+}
 
 // CONNECT 
 $.extend({
@@ -183,34 +135,8 @@ var mouseY = 0;
 var backgroundImage = new Image();
 var FRAME_COLOR_DARK_BLUE = "rgb(0, 0, 255)";
 var FRAME_COLOR_LIGHT_BLUE = "rgb(0, 0, 128)";
+var FRAME_COLOR_WHITE = "rgb(255, 255, 255)";
 
-
-
-/*
-function xButtonDisplay(x,y,h,w) {
-
-	// Offer Container area
-	myContainer.x = 350;
-	myContainer.y = 250;
-	myContainer.width = 180;
-	myContainer.height = 100;
-	myContainer.rgb = FRAME_COLOR_WHITE;
-	drawButton(myContainer);
-	
-	// Hit Area 
-	myButton.x = 375;
-	myButton.y = 300;
-	myButton.width = 130;
-	myButton.height = 30;
-	//myButton.rgb = BUTTON_COLOR_LIGHT;
-	drawButton(myButton);
-	
-	buttonObj.src = "https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif";
-	buttonObj.onload = function() {
-		canvasContext.drawImage(buttonObj, 375,300, 130, 30);
-	};
-}
-*/
 
 function showBuyButton() {
 	// Offer Container area
@@ -231,7 +157,7 @@ function showBuyButton() {
 	
 	buttonObj.src = "https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif";
 	buttonObj.onload = function() {
-		canvasContext.drawImage(buttonObj, 375,300, 130, 30);
+		canvasContext.drawImage(buttonObj, 325,300, 130, 30);
 	};
 }
 
@@ -261,21 +187,20 @@ $(function() {
 	$('#connect').click(function() {	
 		$.connect(function(data){
 			xconn.connectResult(data);
-			console.log(testButton.xButtonDisplay()  );
+			console.log(testButton.getX());
 		});
 	});
 	
 	$('#createButton').click(function() {	
 		xconn.setData('method=createButton');
 		$.createButton(function(data){
-		
 			xconn.connectResult(data);
 			showBuyButton();
 		});
 	});
 	
 
-	$("#" + xconnection.getTarget()).click(function(eventObject) {
+	$("#" + xconn.getTarget()).click(function(eventObject) {
 		
 		mouseX = eventObject.pageX - this.offsetLeft;
 		mouseY = eventObject.pageY - this.offsetTop;
@@ -304,3 +229,12 @@ $(function() {
 	});
 	*/
 });
+
+
+
+var xconn = new xconnection('/html5-dg/server/coldfusion/connect.cfc','method=connect','mainCanvas');
+var testButton = new xconn.xbutton(375,300,120,30);
+
+
+
+
