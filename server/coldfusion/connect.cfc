@@ -47,7 +47,7 @@
        
 		<cfset returnObj = ''>
    		<cfloop from="1" to="#ArrayLen(items)#" index="i">
-			<cfif items[i].number eq "456">
+			<cfif items[i].number eq arguments.itemId>
                 <cfset returnObj = items[i]>
                 <cfset returnObj['buttonId'] = createUUID()>
                 <cfbreak>
@@ -86,8 +86,18 @@
     
      <cffunction name="setExpressCheckout" access="remote" returntype="any" returnFormat="JSON">
 		<cfargument name="webToken" type="string" required="no">
-        <cfargument name="itemNumber" type="string" required="no">
+        <cfargument name="itemId" type="string" required="yes">
+        <cfargument name="qty" type="string" required="yes">
 		
+        <cfset returnObj = ''>
+   		<cfloop from="1" to="#ArrayLen(items)#" index="i">
+			<cfif items[i].number eq arguments.itemId>
+                <cfset returnObj = items[i]>
+                <cfset returnObj['qty'] = arguments.qty>
+                <cfbreak>
+            </cfif>
+        </cfloop>
+        
 		<cfset var result = "">
         
         <cfscript>
@@ -96,33 +106,34 @@
 				caller = createObject("CallerService");
 				ec = createObject("ExpressCheckout");
 				
-				StructClear(Session);
+				
 				
 				data = StructNew();
 				data.METHOD = "SetExpressCheckout";
 				
 				data.PAYMENTREQUEST_0_CURRENCYCODE="USD";
-      			data.PAYMENTREQUEST_0_AMT="2.00";
-   				data.PAYMENTREQUEST_0_ITEMAMT="2.00";
+      			data.PAYMENTREQUEST_0_AMT=(returnObj.qty * returnObj.amt);
    				data.PAYMENTREQUEST_0_TAXAMT="0";
    				
 				data.PAYMENTREQUEST_0_DESC="Movies";
    				data.PAYMENTREQUEST_0_PAYMENTACTION="Sale";
-   				data.L_PAYMENTREQUEST_0_ITEMCATEGORY0="Digital";
-   				data.L_PAYMENTREQUEST_0_NAME0="Mega Sheilds";
-   				data.L_PAYMENTREQUEST_0_NUMBER0="1234";
-   				data.L_PAYMENTREQUEST_0_QTY0="2";
+   				data.L_PAYMENTREQUEST_0_ITEMCATEGORY0=returnObj.category;
+   				data.L_PAYMENTREQUEST_0_NAME0=returnObj.name;
+   				data.L_PAYMENTREQUEST_0_NUMBER0=returnObj.number;
+   				data.L_PAYMENTREQUEST_0_QTY0=returnObj.qty;
    				data.L_PAYMENTREQUEST_0_TAXAMT0="0";
-   				data.L_PAYMENTREQUEST_0_AMT0="1.00";
-   				data.L_PAYMENTREQUEST_0_DESC0="Download";
+   				data.L_PAYMENTREQUEST_0_AMT0=returnObj.amt;
+   				data.L_PAYMENTREQUEST_0_DESC0=returnObj.desc;
 				
 			
-				FORM.L_NAME0 = "boo";
-				FORM.L_AMT0 = "1.00";
-				FORM.L_QTY0="2";
+				FORM.L_NAME0 = returnObj.name;
+				FORM.L_AMT0 = returnObj.amt;
+				FORM.L_QTY0=returnObj.qty;
+				
 				FORM.currencyCodeType = "USD";
 			
-				FORM.ITEMCNT = "1";
+				FORM.ITEMCNT = 1;
+				
 				data.SHIPPINGAMT = "0";
 				data.SHIPDISCAMT = "0";
 				data.TAXAMT = "0";
@@ -144,7 +155,7 @@
 				response = caller.doHttppost(requestData);
 				
 				responseStruct = caller.getNVPResponse(#URLDecode(response)#);
-				session.resStruct = responseStruct;
+				
 			
 				if (responseStruct.Ack is not "Success")
 				{

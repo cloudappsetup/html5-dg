@@ -3,15 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Thank you</title>
+
 <script>
 
 function closeFlow() {
-    parent.releaseDG();
+    parent.releaseDG(<cfoutput>#serializeJSON(url)#</cfoutput>);
 }
 </script>
 </head>
 
-<body onload="closeFlow()">
+<body ><!--onload="closeFlow()"-->
 <div style="background-color:#FFF;height:400px;width:300px; border-radius:8px;padding:20px;">
     Thank you for the purchase!
     <button id="close" onclick="closeFlow();">close</button>

@@ -70,22 +70,33 @@ var xconnection = function(url, target) {
 			var w = xconnection.getWidth();
 			var itemId = xconnection.getItemId();
 		
-			$('#' + xconnection.getTarget()).append(' <div id="xButtonContainer" class="xButtonContainer"><a href="#" class="xButtonLink"><img  src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif" class="xButtonImg" /></div>');
+			$('#' + xconnection.getTarget()).append('<div id="xButtonContainer" class="xButtonContainer">' + 
+			'<div class="xButtonName"></div>' + 
+			'<label>Quantity:</label><input type="number" min="0" max="10" step="1" value="2" class="xButtonQty">' + 
+			'<img  src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif" class="xButtonImg" /></div>');
 			
 			$('#xButtonContainer').width(w);
 			$('#xButtonContainer').height(h);
 			$('#xButtonContainer').css({ "left": top + "px"});
 			$('#xButtonContainer').css({ "top": left + "px"});
 			
-			xconnection.callServer('method=createButton',function(data){
+			xconnection.callServer('method=createButton&itemId=' + xconnection.getItemId(),function(data){
 				console.log(data);
+				console.log($('#xButtonQty'))
 				xconnection.setItemId(data.number);
 				xconnection.setButtonId(data.buttonId);
-				$('#xButtonContainer .xButtonLink').attr('id',data.number);
+				$('#xButtonContainer .xButtonImg').attr('id',data.number);
+				$('#xButtonContainer .xButtonQty').val(data.qty);
+				$('#xButtonContainer .xButtonName').html(data.name);
 				$('#xButtonContainer').attr('id', data.buttonId);
 				
-				$('#' +  data.buttonId).live('click', function() {	
-					xconnection.callServer('method=setExpressCheckout',function(data){
+				
+				
+				$('#' +  data.buttonId + ' .xButtonImg').live('click', function() {	
+					console.log(xconnection.getButtonId());
+					var qty = $('#' + xconnection.getButtonId() + ' .xButtonQty').val();
+					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty;
+					xconnection.callServer(data,function(data){
 						console.log(data);
 						startDGFlow(data.redirecturl);
 					});
@@ -119,7 +130,9 @@ startDGFlow = function(url) {
 }
 		
 
-function releaseDG() {
-	parent.dg.closeFlow();
+function releaseDG(data) {
+	console.log(data);
+	dg.closeFlow();
+	
 }
 
