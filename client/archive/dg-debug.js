@@ -18,7 +18,7 @@ PAYPAL.apps = PAYPAL.apps || {};
             setTrigger: function (el) {
                 that._setTrigger(el);
             },
-            9: function (url) {
+            startFlow: function (url) {
                 var win = that._render();
                 if (win.location) {
                     win.location = url;

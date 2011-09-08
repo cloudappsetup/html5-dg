@@ -1,5 +1,29 @@
 <cfcomponent>
-
+	<cfscript>
+	items = ArrayNew(1);
+		
+	itemObj = StructNew();
+	itemObj['name'] = "Mega Sheilds";
+	itemObj['number'] ="123";
+	itemObj['qty'] = "1";	
+	itemObj['taxamt'] = "0";
+	itemObj['amt'] = "1.00";
+	itemObj['desc'] = "Unlock the power!";
+	itemObj['category'] = "Digital";
+	temp = ArrayAppend(items,itemObj);
+	
+	itemObj = StructNew();
+	itemObj['name'] = "Laser Cannon";
+	itemObj['number'] ="456";
+	itemObj['qty'] = "1";	
+	itemObj['taxamt'] = "0";
+	itemObj['amt'] = "1.25";
+	itemObj['desc'] = "Lock and load!";
+	itemObj['category'] = "Digital";
+	temp = ArrayAppend(items,itemObj);
+		
+	</cfscript>
+        
 	<cfset  webtoken = '999999'>
 	<cffunction name="connect" access="remote" returntype="any" returnFormat="JSON">
 		
@@ -18,12 +42,24 @@
     
     <cffunction name="createButton" access="remote" returntype="any" returnFormat="JSON">
 		<cfargument name="webToken" type="string" required="no">
-        <cfargument name="itemNumber" type="string" required="no">
-		
-		<cfset var result = "">
+        <cfargument name="itemId" type="string" required="no">
         
-        
+       
+		<cfset returnObj = ''>
+   		<cfloop from="1" to="#ArrayLen(items)#" index="i">
+			<cfif items[i].number eq "456">
+                <cfset returnObj = items[i]>
+                <cfset returnObj['buttonId'] = createUUID()>
+                <cfbreak>
+            </cfif>
+        </cfloop>
+      
         <cfscript>
+		/*
+		var result = "";
+		
+
+		
 		if(webToken eq arguments.webToken) 
 		{
 			var webObj = StructNew();
@@ -38,10 +74,11 @@
 			webObj['buttonId'] = 'button_' & createUUID();	
 			webObj['state'] = 'createButton';		
 		}
+		*/
 		
 	
 		</cfscript>
-		<cfset result = serializeJSON(webObj)>	
+		<cfset result = serializeJSON(returnObj)>	
 
 		<cfreturn result>
 	</cffunction>

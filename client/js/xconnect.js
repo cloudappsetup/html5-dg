@@ -1,7 +1,6 @@
 // JavaScript Document
 
-//var dg = new PAYPAL.apps.DGFlow({});
-var dg;
+var dg = new PAYPAL.apps.DGFlow({});
 /*
 connection(url,data)
 url = the server side connection script
@@ -14,11 +13,11 @@ targetType = either canvas or div
 
 var xconnection = function(url, target) {
 	var url, target, state, webToken;
-	var xbutton = {x : "",
-	               y : "",
+	var xbutton = {itemId : "0",
+				   top : "",
+	               left : "",
 				   height : "",
-				   width : "",
-				   frameColor : ""};
+				   width : ""};
 	
 	return{
 		init: function(url, target){
@@ -40,11 +39,13 @@ var xconnection = function(url, target) {
 		setWebToken: function(newWebToken) { webToken = newWebToken; },
 		getWebToken: function() { return webToken; },
 		
-		xbutton: function(x, y, top, left) {
-			this.xbutton.x = x;
-			this.xbutton.y = y;
+		xbutton: function(itemId, top, left, height, width,buttonId) {
+			this.xbutton.itemId = itemId;
 			this.xbutton.top = top;
 			this.xbutton.left = left;
+			this.xbutton.height = height;
+			this.xbutton.width = width;
+			this.xbutton.buttonId = buttonId;
 		},
 		
 		setTop: function(newTop) { this.xbutton.top = newTop; },
@@ -56,44 +57,41 @@ var xconnection = function(url, target) {
 		getHeight: function() { return this.xbutton.height; },
 		setWidth: function(newWidth) { this.xbutton.width = newWidth; },
 		getWidth: function() { return this.xbutton.width; },
+		setItemId: function(newItemId) { this.xbutton.itemId = newItemId; },
+		getItemId: function() { return this.xbutton.itemId; },
+		setButtonId: function(newButtonId) { this.xbutton.buttonId = newButtonId; },
+		getButtonId: function() { return this.xbutton.buttonId; },
 			 
-		setFrameColor: function(newFrameColor) { this.xbutton.frameColor = newFrameColor; },
-		getFrameColor: function() { return this.xbutton.frameColor; },  
 		
 		xButtonDisplay: function(){
 			var top = xconnection.getTop();
 			var left = xconnection.getLeft();
 			var h = xconnection.getHeight();
 			var w = xconnection.getWidth();
+			var itemId = xconnection.getItemId();
+		
+			$('#' + xconnection.getTarget()).append(' <div id="xButtonContainer" class="xButtonContainer"><a href="#" class="xButtonLink"><img  src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif" class="xButtonImg" /></div>');
 			
-			console.log(w);
-			$('#gameContainer').append(' <div id="xButtonContainer" style="background-color:#FFF; border-radius:8px; height:90px; position:absolute; display:block; width:200px; left:50px; top:300px; z-index:999999;"><a href="#" class="ppButton"><img  style="position:absolute;top:20px; left:50px;" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif"/></div>');
 			$('#xButtonContainer').width(w);
 			$('#xButtonContainer').height(h);
 			$('#xButtonContainer').css({ "left": top + "px"});
 			$('#xButtonContainer').css({ "top": left + "px"});
 			
-			var buttonId;
 			xconnection.callServer('method=createButton',function(data){
-				buttonId = data.buttonId;
-				$('#xButtonContainer .ppButton').attr('id',data.buttonId);
-				xconnection.connectResult(data);
+				console.log(data);
+				xconnection.setItemId(data.number);
+				xconnection.setButtonId(data.buttonId);
+				$('#xButtonContainer .xButtonLink').attr('id',data.number);
+				$('#xButtonContainer').attr('id', data.buttonId);
 				
-				dg = new PAYPAL.apps.DGFlow({
-					trigger: data.buttonId
+				$('#' +  data.buttonId).live('click', function() {	
+					xconnection.callServer('method=setExpressCheckout',function(data){
+						console.log(data);
+						startDGFlow(data.redirecturl);
+					});
 				});
-				
-				xconnection.callServer('method=setExpressCheckout',function(data){
-					console.log(data);
-					$('#' + buttonId).attr('href',data.redirecturl);
-					
-					
-				});
-				
 			});
 			
-			
-				
 		},
 		
 		
@@ -116,105 +114,12 @@ var xconnection = function(url, target) {
 	
 }();
 
-
-
-// BUTTONCREATE
-$.extend({
-	createButton : function(callbackFnk){
-		$.ajax({
-			url: xconn.getUrl(),
-			data: 'method=createButton',
-			success: function(data){
-				var obj = $.parseJSON(data);
-				
-				if(typeof callbackFnk == 'function'){
-					callbackFnk.call(this, obj);
-				}
-			}
-		});	
-	}
-	
-});
-
-
-// SETEXPRESSCHECKOUT
-$.extend({
-	setExpressCheckout : function(callbackFnk){
-		$.ajax({
-			url: xconn.getUrl(),
-			data: xconn.getData(),
-			success: function(data){
-				var obj = $.parseJSON(data);
-				
-				if(typeof callbackFnk == 'function'){
-					callbackFnk.call(this, obj);
-				}
-			}
-		});	
-	}
-});
-
-
-
+startDGFlow = function(url) {	
+	dg.startFlow(url);
+}
+		
 
 function releaseDG() {
-	
 	parent.dg.closeFlow();
-	
 }
 
-
-
-
-var canvasContext;
-var myButton = new Object();
-var myContainer = new Object();
-var buttonObj = new Image();
-
-var mouseX = 0;
-var mouseY = 0;
-var backgroundImage = new Image();
-var FRAME_COLOR_DARK_BLUE = "rgb(0, 0, 255)";
-var FRAME_COLOR_LIGHT_BLUE = "rgb(0, 0, 128)";
-
-
-
-
-$(function() {
-	
-	
-	$('#createButton').click(function() {	
-	
-		
-		xconnection.xButtonDisplay();
-	/*
-		$.createButton(function(data){
-			xconn.connectResult(data);
-			showBuyButton();
-		});
-		*/;
-	});
-	
-
-	$("#" + xconnection.getTarget()).click(function(eventObject) {
-		
-			xconn.setData('method=setExpressCheckout');
-			$.setExpressCheckout(function(data){
-				console.log(data.redirecturl);
-				dg.startFlow(data.redirecturl);
-			});
-		
-	});
-
-
-	// Debug code for XY position of mouse remove later
-	/*
-	$("#mainCanvas").mousemove(function(eventObject) {
-		mouseX = eventObject.pageX - this.offsetLeft;
-		mouseY = eventObject.pageY - this.offsetTop;
-
-		$("#mouseXYSpan").html("X: " + mouseX + "   Y: " + mouseY);
-		
-	});
-	*/
-});

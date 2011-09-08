@@ -8,6 +8,21 @@
 <script src ="js/game.js"></script>
 <script src ="js/xconnect.js"></script>
 
+<style>
+.xButtonContainer 
+{
+	background-color:#FFF; border-radius:8px;position:absolute; display:block; z-index:10;
+}
+.xButtonLink
+{
+	
+}
+
+.xButtonImg 
+{
+	position:absolute;top:50px; left:80px;
+}
+</style>
 </head> 
 <body> 
 
@@ -15,19 +30,19 @@
 <br>
 
 <div id="gameContainer">
-<canvas id="mainCanvas" width="550" height="400">
-Your browser does not support the canvas element.
-</canvas>
-   
+    <canvas id="mainCanvas" width="550" height="400">
+    Your browser does not support the canvas element.
+    </canvas>
+
 </div>
-
-<br /><span id="outputSpan"></span>
-<br /><span id="mouseXYSpan"></span>
-
 <script>
-xconnection.init('/html5-dg/server/coldfusion/connect.cfc','mainCanvas');
-xconnection.xbutton(200,200,100,200);
-//xconnection.xButtonDisplay();
+// DEVELOPER CODE
+xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer');
+xconnection.xbutton('123',200,200,100,200);
+
+$('#createButton').live('click',function() {	
+	xconnection.xButtonDisplay()
+});
 
 </script>
 </body>
