@@ -50,8 +50,8 @@ var xconnection = function(url, target) {
 		
 		setTop: function(newTop) { this.xbutton.top = newTop; },
 		getTop: function() { return this.xbutton.top; },
-		setLeft: function(newY) { this.xbutton.top = newTop; },
-		getLeft: function() { return this.xbutton.top; },
+		setLeft: function(newLeft) { this.xbutton.left = newLeft; },
+		getLeft: function() { return this.xbutton.left; },
 			
 		setHeight: function(newHeight) { this.xbutton.height = newHeight; },
 		getHeight: function() { return this.xbutton.height; },
@@ -61,6 +61,7 @@ var xconnection = function(url, target) {
 		getItemId: function() { return this.xbutton.itemId; },
 		setButtonId: function(newButtonId) { this.xbutton.buttonId = newButtonId; },
 		getButtonId: function() { return this.xbutton.buttonId; },
+		
 			 
 		
 		xButtonDisplay: function(){
@@ -70,29 +71,31 @@ var xconnection = function(url, target) {
 			var w = xconnection.getWidth();
 			var itemId = xconnection.getItemId();
 		
-			$('#' + xconnection.getTarget()).append('<div id="xButtonContainer" class="xButtonContainer">' + 
+			var xBC = $('<div id="xButtonContainer" class="xButtonContainer">' + 
 			'<div class="xButtonName"></div>' + 
+			'<div class="xButtonDesc"></div>' + 
+			'<div class="xButtonAmt"></div>' + 
 			'<label>Quantity:</label><input type="number" min="0" max="10" step="1" value="2" class="xButtonQty">' + 
-			'<img  src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif" class="xButtonImg" /></div>');
+			'<div class="xButtonLink">&nbsp;</div></div>').hide().fadeIn(1000);
+			
+			$('#' + xconnection.getTarget()).append(xBC);
 			
 			$('#xButtonContainer').width(w);
 			$('#xButtonContainer').height(h);
-			$('#xButtonContainer').css({ "left": top + "px"});
-			$('#xButtonContainer').css({ "top": left + "px"});
+			$('#xButtonContainer').css({ "top": top + "px"});
+			$('#xButtonContainer').css({ "left": left + "px"});
 			
 			xconnection.callServer('method=createButton&itemId=' + xconnection.getItemId(),function(data){
-				console.log(data);
-				console.log($('#xButtonQty'))
 				xconnection.setItemId(data.number);
 				xconnection.setButtonId(data.buttonId);
-				$('#xButtonContainer .xButtonImg').attr('id',data.number);
+				
+				$('#xButtonContainer .xButtonLink').attr('id',data.number);
 				$('#xButtonContainer .xButtonQty').val(data.qty);
 				$('#xButtonContainer .xButtonName').html(data.name);
+				$('#xButtonContainer .xButtonDesc').html(data.desc);
 				$('#xButtonContainer').attr('id', data.buttonId);
 				
-				
-				
-				$('#' +  data.buttonId + ' .xButtonImg').live('click', function() {	
+				$('#' +  data.buttonId + ' .xButtonLink').live('click', function() {	
 					console.log(xconnection.getButtonId());
 					var qty = $('#' + xconnection.getButtonId() + ' .xButtonQty').val();
 					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty;
@@ -125,6 +128,14 @@ var xconnection = function(url, target) {
 	
 }();
 
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+    return false;
+  }
+}
+
 startDGFlow = function(url) {	
 	dg.startFlow(url);
 }
@@ -132,7 +143,13 @@ startDGFlow = function(url) {
 
 function releaseDG(data) {
 	console.log(data);
+	localStorage.setItem(xconnection.getButtonId(), JSON.stringify(data));
 	dg.closeFlow();
+	$('#' + xconnection.getButtonId()).fadeOut(1000, function()
+	{
+		alert('Item Unlocked');
+	});
+	
 	
 }
 

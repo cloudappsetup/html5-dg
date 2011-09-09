@@ -53,31 +53,7 @@
                 <cfbreak>
             </cfif>
         </cfloop>
-      
-        <cfscript>
-		/*
-		var result = "";
-		
-
-		
-		if(webToken eq arguments.webToken) 
-		{
-			var webObj = StructNew();
-			webObj['success'] = true;
-			webObj['webtoken'] = webtoken;
-			webObj['buttonId'] = 'button_' & createUUID();	
-			webObj['state'] = 'createButton';	
-		} else {
-			var webObj = StructNew();
-			webObj['success'] = true;
-			webObj['webtoken'] = '7777777';
-			webObj['buttonId'] = 'button_' & createUUID();	
-			webObj['state'] = 'createButton';		
-		}
-		*/
-		
-	
-		</cfscript>
+   
 		<cfset result = serializeJSON(returnObj)>	
 
 		<cfreturn result>
@@ -105,8 +81,6 @@
 				// create our objects to call methods on
 				caller = createObject("CallerService");
 				ec = createObject("ExpressCheckout");
-				
-				
 				
 				data = StructNew();
 				data.METHOD = "SetExpressCheckout";

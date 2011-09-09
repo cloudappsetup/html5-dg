@@ -18,34 +18,43 @@
 {
 	text-align:center;
 	width:100%;
-	margin-bottom:4px;
+	margin-bottom:10px;
+	font-weight:bold;
 }
 
 .xButtonQty
 {
-	width:30px;
+	width:40px;
+	position:absolute;bottom:4px; left:80px;
+	font-size:14px;
 }
 
 .xButtonContainer label
 {
-	font-size:12px;	
+	font-size:14px;	
+	position:absolute;bottom:10px; 
 }
 
 
 .xButtonLink
-{
-	
+{ 
+	background-image:url(https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif);
+	background-repeat:no-repeat;
+	background-position:top;
+	width:105px;
+	height:27px;
+	position:absolute;bottom:5px; right:5px;
 }
 
-.xButtonImg 
-{
-	position:absolute;bottom:5px; left:80px;
-}
+
 </style>
 </head> 
 <body> 
 
-<button id="createButton">Create Button</button>
+<button id="sellShield">Sheilds </button>
+ OR 
+
+<button id="sellLaser">Lasers </button>
 <br>
 
 <div id="gameContainer">
@@ -57,9 +66,15 @@
 <script>
 // DEVELOPER CODE
 xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer');
-xconnection.xbutton('123',200,200,100,200);
 
-$('#createButton').live('click',function() {	
+
+$('#sellShield').live('click',function() {	
+	xconnection.xbutton('123',300,275,100,250);
+	xconnection.xButtonDisplay()
+});
+
+$('#sellLaser').live('click',function() {	
+	xconnection.xbutton('456',300,275,100,250);
 	xconnection.xButtonDisplay()
 });
 
