@@ -72,11 +72,12 @@ var xconnection = function(url, target) {
 			var itemId = xconnection.getItemId();
 		
 			var xBC = $('<div id="xButtonContainer" class="xButtonContainer">' + 
+			'<div class="xClose" ></div>' + 
 			'<div class="xButtonName"></div>' + 
 			'<div class="xButtonDesc"></div>' + 
 			'<div class="xButtonAmt"></div>' + 
 			'<label>Quantity:</label><input type="number" min="0" max="10" step="1" value="2" class="xButtonQty">' + 
-			'<div class="xButtonLink">&nbsp;</div></div>').hide().fadeIn(1000);
+			'<div class="xButtonLink">&nbsp;</div></div>').hide().fadeIn(500);
 			
 			$('#' + xconnection.getTarget()).append(xBC);
 			
@@ -95,12 +96,16 @@ var xconnection = function(url, target) {
 				$('#xButtonContainer .xButtonDesc').html(data.desc);
 				$('#xButtonContainer').attr('id', data.buttonId);
 				
+				$('#' +  data.buttonId + ' .xClose').live('click', function() {
+					$('#' + xconnection.getButtonId()).fadeOut(500);
+				});
+				
 				$('#' +  data.buttonId + ' .xButtonLink').live('click', function() {	
-					console.log(xconnection.getButtonId());
+					//console.log(xconnection.getButtonId());
 					var qty = $('#' + xconnection.getButtonId() + ' .xButtonQty').val();
 					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty;
 					xconnection.callServer(data,function(data){
-						console.log(data);
+						//console.log(data);
 						startDGFlow(data.redirecturl);
 					});
 				});
@@ -142,10 +147,10 @@ startDGFlow = function(url) {
 		
 
 function releaseDG(data) {
-	console.log(data);
+	//console.log(data);
 	localStorage.setItem(xconnection.getButtonId(), JSON.stringify(data));
 	dg.closeFlow();
-	$('#' + xconnection.getButtonId()).fadeOut(1000, function()
+	$('#' + xconnection.getButtonId()).fadeOut(500, function()
 	{
 		alert('Item Unlocked');
 	});

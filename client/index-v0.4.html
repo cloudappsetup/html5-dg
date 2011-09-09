@@ -1,0 +1,83 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jQuery HTML 5 Web App</title>
+<script src="js/jquery-1.6.2.min.js"></script>
+<script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
+<script src ="js/game.js"></script>
+<script src ="js/xconnect.js"></script>
+
+<style>
+.xButtonContainer 
+{
+	background-color:#FFF; border-radius:8px;position:absolute; display:block; z-index:10;padding:4px;font-family:Verdana, Geneva, sans-serif; border:#006699 2px solid; box-shadow:#666;
+}
+
+.xButtonName
+{
+	text-align:center;
+	width:100%;
+	margin-bottom:10px;
+	font-weight:bold;
+}
+
+.xButtonQty
+{
+	width:40px;
+	position:absolute;bottom:4px; left:80px;
+	font-size:14px;
+}
+
+.xButtonContainer label
+{
+	font-size:14px;	
+	position:absolute;bottom:10px; 
+}
+
+
+.xButtonLink
+{ 
+	background-image:url(https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif);
+	background-repeat:no-repeat;
+	background-position:top;
+	width:105px;
+	height:27px;
+	position:absolute;bottom:5px; right:5px;
+}
+
+
+</style>
+</head> 
+<body> 
+
+<button id="sellShield">Sheilds </button>
+ OR 
+
+<button id="sellLaser">Lasers </button>
+<br>
+
+<div id="gameContainer">
+    <canvas id="mainCanvas" width="550" height="400">
+    Your browser does not support the canvas element.
+    </canvas>
+
+</div>
+<script>
+// DEVELOPER CODE
+xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer');
+
+
+$('#sellShield').live('click',function() {	
+	xconnection.xbutton('123',300,275,100,250);
+	xconnection.xButtonDisplay()
+});
+
+$('#sellLaser').live('click',function() {	
+	xconnection.xbutton('456',300,275,100,250);
+	xconnection.xButtonDisplay()
+});
+
+</script>
+</body>
+</html>
