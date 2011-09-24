@@ -1,0 +1,19 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#gameContainer {
+	position: absolute;
+	top:50px;
+    left:0px;
+	width:980px;
+	height:700px; 
+	border:#222 solid 8px; 
+	background-color: #222222;
+}
+
+#mainCanvas {
+	 position:absolute;
+	 top:0px;
+	 background-color:#00CC66;
+}
+

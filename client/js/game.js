@@ -12,11 +12,12 @@ var backgroundImage = new Image();
 function setGame() {
 	var canvas = $("#mainCanvas").get(0);
 	canvasContext = canvas.getContext('2d');
-	backgroundImage.src = "/html5-dg/client/images/angrybirds.png";
-	
+	//backgroundImage.src = "/html5-dg/client/images/angrybirds.png";
+	/*
 	$(backgroundImage).load(function() {
 		canvasContext.drawImage(backgroundImage, 0, 0);
 	});
+	*/
 	  
 }
 

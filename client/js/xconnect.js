@@ -12,65 +12,92 @@ targetType = either canvas or div
 
 
 var xconnection = function(url, target) {
-	var url, target, state, webToken;
-	var xbutton = {itemId : "0",
+	var url, target, state, userid;
+	var xButton = {itemId : "0",
 				   top : "",
 	               left : "",
 				   height : "",
 				   width : ""};
 	
 	return{
-		init: function(url, target){
+		init: function(url, target,completeCallBack){
 			this.url = url;
 			this.target = target;
+			this.completeCallBack = completeCallBack;
+			this.userId = 0;
+			var xC = $('<div id="xContainer" class="xContainer"></div>'); 
+			$('#' + target).append(xC);
+			
+			xconnection.callServer('method=connect',function(data){
+				console.log(data.userId);
+				xconnection.setUserId(data.userId);
+			});
+			
 		},
 		
 		setUrl: function(newUrl) { this.url = newUrl; },
 		getUrl: function() { return this.url; },
 		setTarget: function(newTarget) { this.target = newTarget; },
 		getTarget: function() { return this.target; },
-		
+		setCompleteOrderCallback: function(newCompleteCallBack) { this.completeCallBack = newCompleteCallBack; },
+		getCompleteOrderCallback : function() {return this.completeCallBack; },
+		/*
 		connectResult: function(newConnData){
 			xconnection.setState(newConnData.state);
-			xconnection.setWebToken(newConnData.webToken);
+			xconnection.setUserId(newConnData.userId);
+			
 		},
+		*/
+		
 		setState: function(newState) { state = newState; },
 		getState: function() { return state; },
-		setWebToken: function(newWebToken) { webToken = newWebToken; },
-		getWebToken: function() { return webToken; },
+		setUserId: function(newUserId) { userId = newUserId; },
+		getUserId: function() { return userId; },
 		
-		xbutton: function(itemId, top, left, height, width,buttonId) {
-			this.xbutton.itemId = itemId;
-			this.xbutton.top = top;
-			this.xbutton.left = left;
-			this.xbutton.height = height;
-			this.xbutton.width = width;
-			this.xbutton.buttonId = buttonId;
+		xButton: function(itemId, top, right, bottom, left, height, width, buttonId) {
+			this.xButton.itemId = itemId;
+			this.xButton.top = top;
+			this.xButton.right = right;
+			this.xButton.bottom = bottom;
+			this.xButton.left = left;
+			this.xButton.height = height;
+			this.xButton.width = width;
+			this.xButton.buttonId = buttonId;
 		},
 		
-		setTop: function(newTop) { this.xbutton.top = newTop; },
-		getTop: function() { return this.xbutton.top; },
-		setLeft: function(newLeft) { this.xbutton.left = newLeft; },
-		getLeft: function() { return this.xbutton.left; },
+		setTop: function(newTop) { this.xButton.top = newTop; },
+		getTop: function() { return this.xButton.top; },
+		
+		setRight: function(newRight) { this.xButton.right = newRight; },
+		getRight: function() { return this.xButton.right; },
+		
+		setBottom: function(newBottom) { this.xButton.bottom = newBottom; },
+		getBottom: function() { return this.xButton.bottom; },
+		
+		setLeft: function(newLeft) { this.xButton.left = newLeft; },
+		getLeft: function() { return this.xButton.left; },
 			
-		setHeight: function(newHeight) { this.xbutton.height = newHeight; },
-		getHeight: function() { return this.xbutton.height; },
-		setWidth: function(newWidth) { this.xbutton.width = newWidth; },
-		getWidth: function() { return this.xbutton.width; },
-		setItemId: function(newItemId) { this.xbutton.itemId = newItemId; },
-		getItemId: function() { return this.xbutton.itemId; },
-		setButtonId: function(newButtonId) { this.xbutton.buttonId = newButtonId; },
-		getButtonId: function() { return this.xbutton.buttonId; },
+		setHeight: function(newHeight) { this.xButton.height = newHeight; },
+		getHeight: function() { return this.xButton.height; },
+		setWidth: function(newWidth) { this.xButton.width = newWidth; },
+		getWidth: function() { return this.xButton.width; },
+		setItemId: function(newItemId) { this.xButton.itemId = newItemId; },
+		getItemId: function() { return this.xButton.itemId; },
+		setButtonId: function(newButtonId) { this.xButton.buttonId = newButtonId; },
+		getButtonId: function() { return this.xButton.buttonId; },
 		
 			 
 		
 		xButtonDisplay: function(){
 			var top = xconnection.getTop();
+			var right = xconnection.getRight();
+			var bottom = xconnection.getBottom();
 			var left = xconnection.getLeft();
 			var h = xconnection.getHeight();
 			var w = xconnection.getWidth();
 			var itemId = xconnection.getItemId();
 		
+			
 			var xBC = $('<div id="xButtonContainer" class="xButtonContainer">' + 
 			'<div class="xClose" ></div>' + 
 			'<div class="xButtonName"></div>' + 
@@ -78,13 +105,31 @@ var xconnection = function(url, target) {
 			'<div class="xButtonAmt"></div>' + 
 			'<label>Quantity:</label><input type="number" min="0" max="10" step="1" value="2" class="xButtonQty">' + 
 			'<div class="xButtonLink">&nbsp;</div></div>').hide().fadeIn(500);
-			
-			$('#' + xconnection.getTarget()).append(xBC);
+			console.log(xBC);
+			$('#xContainer').append(xBC);
 			
 			$('#xButtonContainer').width(w);
 			$('#xButtonContainer').height(h);
-			$('#xButtonContainer').css({ "top": top + "px"});
-			$('#xButtonContainer').css({ "left": left + "px"});
+			
+			if(top != null)
+			{
+				$('#xButtonContainer').css({ "top": top + "px"});
+			}
+			
+			if(bottom != null)
+			{
+				$('#xButtonContainer').css({ "bottom": bottom + "px"});
+			}
+			
+			if(right != null)
+			{
+				$('#xButtonContainer').css({ "right": right + "px"});
+			}
+			
+			if(left != null)
+			{
+				$('#xButtonContainer').css({ "left": left + "px"});
+			}
 			
 			xconnection.callServer('method=createButton&itemId=' + xconnection.getItemId(),function(data){
 				xconnection.setItemId(data.number);
@@ -101,16 +146,37 @@ var xconnection = function(url, target) {
 				});
 				
 				$('#' +  data.buttonId + ' .xButtonLink').live('click', function() {	
-					//console.log(xconnection.getButtonId());
+					console.log(xconnection.getButtonId());
 					var qty = $('#' + xconnection.getButtonId() + ' .xButtonQty').val();
-					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty;
+					var userId = xconnection.getUserId();
+					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty + "&userId=" + userId;
 					xconnection.callServer(data,function(data){
-						//console.log(data);
-						startDGFlow(data.redirecturl);
+						console.log(data);
+						if(data.error)
+						{
+							alert('error starting purchase flow');
+						} else {
+							startDGFlow(data.redirecturl);
+						}
 					});
 				});
 			});
 			
+			
+			
+		},
+		
+		xVerify: function(itemId){
+			var userId = xconnection.getUserId();
+			data = localStorage.getItem(userId);
+	
+			xconnection.callServer('method=verifyPurchase&userId=' + userId + '&transactions=' + data + '&itemId=' + itemId,function(data){
+				var obj = $.parseJSON(data);
+				//console.log(data.details['PAYMENTSTATUS']);
+				console.log(data);
+			});
+			
+		
 		},
 		
 		
@@ -147,14 +213,33 @@ startDGFlow = function(url) {
 		
 
 function releaseDG(data) {
-	//console.log(data);
-	localStorage.setItem(xconnection.getButtonId(), JSON.stringify(data));
+	
+	var dataArray = JSON.parse(localStorage.getItem(xconnection.getUserId()));
+	
+	if(dataArray === null)
+	{
+		console.log('undefined');
+		
+		var dataArray = new Array();
+		dataArray.push(data);
+	} else {
+		console.log('defined');
+		console.log(dataArray);
+		
+		dataArray.push(data);
+	}
+	
+	localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
+	
 	dg.closeFlow();
+	
 	$('#' + xconnection.getButtonId()).fadeOut(500, function()
 	{
-		alert('Item Unlocked');
+		var callbackFnk = xconnection.getCompleteOrderCallback();
+		if(typeof callbackFnk == 'function'){
+			callbackFnk.call();
+		}
 	});
-	
 	
 }
 

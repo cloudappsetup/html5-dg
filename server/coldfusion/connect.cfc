@@ -1,108 +1,75 @@
 <cfcomponent>
 	<cfscript>
-	items = ArrayNew(1);
 		
-	itemObj = StructNew();
-	itemObj['name'] = "Mega Sheilds";
-	itemObj['number'] ="123";
-	itemObj['qty'] = "1";	
-	itemObj['taxamt'] = "0";
-	itemObj['amt'] = "1.00";
-	itemObj['desc'] = "Unlock the power!";
-	itemObj['category'] = "Digital";
-	temp = ArrayAppend(items,itemObj);
-	
-	itemObj = StructNew();
-	itemObj['name'] = "Laser Cannon";
-	itemObj['number'] ="456";
-	itemObj['qty'] = "1";	
-	itemObj['taxamt'] = "0";
-	itemObj['amt'] = "1.25";
-	itemObj['desc'] = "Lock and load!";
-	itemObj['category'] = "Digital";
-	temp = ArrayAppend(items,itemObj);
+		// create our objects to call methods on
+		caller = createObject("CallerService");
+		ec = createObject("ExpressCheckout");
+		identity = createObject('component','game');
+		inventory = createObject('component','inventory');
 		
 	</cfscript>
-        
-	<cfset  webtoken = '999999'>
-	<cffunction name="connect" access="remote" returntype="any" returnFormat="JSON">
-		
-		<cfset var result="">
+
+    <cffunction name="connect" access="remote" returntype="any" returnFormat="JSON">
         
         <cfscript>
-		var webObj = StructNew();
-		webObj['success'] = true;
-		webObj['webtoken'] = webtoken;
-		webObj['state'] = 'init';
-		</cfscript>
-		<cfset result = serializeJSON(webObj)>	
+			var returnObj = StructNew();
+			returnObj['success'] = true;
+			returnObj['userId'] = identity.getUserId();
+			returnObj['state'] = 'init';
+			
+			return serializeJSON(returnObj);
+		</cfscript>	
 
-		<cfreturn result>
 	</cffunction>
     
     <cffunction name="createButton" access="remote" returntype="any" returnFormat="JSON">
-		<cfargument name="webToken" type="string" required="no">
-        <cfargument name="itemId" type="string" required="no">
+		<cfargument name="itemId" type="string" required="no">
         
-       
-		<cfset returnObj = ''>
-   		<cfloop from="1" to="#ArrayLen(items)#" index="i">
-			<cfif items[i].number eq arguments.itemId>
-                <cfset returnObj = items[i]>
-                <cfset returnObj['buttonId'] = createUUID()>
-                <cfbreak>
-            </cfif>
-        </cfloop>
-   
-		<cfset result = serializeJSON(returnObj)>	
+       	 <cfscript>
+			var returnObj = StructNew();
+			returnObj = inventory.getItem(arguments.itemId);
+			returnObj['success'] = true;
+			returnObj['buttonId'] = createUUID();
+			returnObj['state'] = 'createButton';
+			
+			return serializeJSON(returnObj);
+		</cfscript>	
 
-		<cfreturn result>
 	</cffunction>
     
     
      <cffunction name="setExpressCheckout" access="remote" returntype="any" returnFormat="JSON">
-		<cfargument name="webToken" type="string" required="no">
+		<cfargument name="userId" type="string" default="0" required="no">
         <cfargument name="itemId" type="string" required="yes">
         <cfargument name="qty" type="string" required="yes">
-		
-        <cfset returnObj = ''>
-   		<cfloop from="1" to="#ArrayLen(items)#" index="i">
-			<cfif items[i].number eq arguments.itemId>
-                <cfset returnObj = items[i]>
-                <cfset returnObj['qty'] = arguments.qty>
-                <cfbreak>
-            </cfif>
-        </cfloop>
-        
+	
 		<cfset var result = "">
         
         <cfscript>
+			var returnObj = StructNew();
+		
+			var itemObj = StructNew();
+			itemObj = inventory.getItem(arguments.itemId);
+			itemObj['qty'] = arguments.qty;
+		
 			try {	
-				// create our objects to call methods on
-				caller = createObject("CallerService");
-				ec = createObject("ExpressCheckout");
-				
 				data = StructNew();
 				data.METHOD = "SetExpressCheckout";
 				
 				data.PAYMENTREQUEST_0_CURRENCYCODE="USD";
-      			data.PAYMENTREQUEST_0_AMT=(returnObj.qty * returnObj.amt);
+      			data.PAYMENTREQUEST_0_AMT=(itemObj.qty * itemObj.amt);
    				data.PAYMENTREQUEST_0_TAXAMT="0";
    				
-				data.PAYMENTREQUEST_0_DESC="Movies";
+				data.PAYMENTREQUEST_0_DESC="Canvas Wars";
    				data.PAYMENTREQUEST_0_PAYMENTACTION="Sale";
-   				data.L_PAYMENTREQUEST_0_ITEMCATEGORY0=returnObj.category;
-   				data.L_PAYMENTREQUEST_0_NAME0=returnObj.name;
-   				data.L_PAYMENTREQUEST_0_NUMBER0=returnObj.number;
-   				data.L_PAYMENTREQUEST_0_QTY0=returnObj.qty;
-   				data.L_PAYMENTREQUEST_0_TAXAMT0="0";
-   				data.L_PAYMENTREQUEST_0_AMT0=returnObj.amt;
-   				data.L_PAYMENTREQUEST_0_DESC0=returnObj.desc;
 				
-			
-				FORM.L_NAME0 = returnObj.name;
-				FORM.L_AMT0 = returnObj.amt;
-				FORM.L_QTY0=returnObj.qty;
+   				data.L_PAYMENTREQUEST_0_ITEMCATEGORY0=itemObj.category;
+   				data.L_PAYMENTREQUEST_0_NAME0=itemObj.name;
+   				data.L_PAYMENTREQUEST_0_NUMBER0=itemObj.number;
+   				data.L_PAYMENTREQUEST_0_QTY0=itemObj.qty;
+   				data.L_PAYMENTREQUEST_0_TAXAMT0="0";
+   				data.L_PAYMENTREQUEST_0_AMT0=itemObj.amt;
+   				data.L_PAYMENTREQUEST_0_DESC0=itemObj.desc;
 				
 				FORM.currencyCodeType = "USD";
 			
@@ -114,7 +81,7 @@
 				data.INSURANCEAMT = "0";
 				form.paymentAction = "sale";
 				form.paymentType="sale";
-				
+				data.PAYMENTREQUEST_0_CUSTOM = arguments.userId & ',' & itemObj.number;
 				
 				// set url info
 				data.serverName = SERVER_NAME;
@@ -143,32 +110,91 @@
 				We need to pass token as parameter to destination URL which redirect to return URL
 				*/
 				redirecturl = request.PayPalURL & token;
-				//location(redirecturl,false);
 				
-				var webObj = StructNew();
-				webObj['success'] = true;
-				webObj['webtoken'] = webtoken;
-				webObj['redirecturl'] = redirecturl;	
-				webObj['state'] = 'setExpressCheckout';
+				returnObj['success'] = true;
+				returnObj['redirecturl'] = redirecturl;	
+				returnObj['state'] = 'setExpressCheckout';
 				
 			}
 			
 			catch(any e) 
 			{
-				var webObj = StructNew();
-				webObj['success'] = true;
-				webObj['error'] = e.message;
-				webObj['webtoken'] = webtoken;
-				webObj['state'] = 'setExpressCheckout';
+				returnObj['success'] = true;
+				returnObj['error'] = e.message;
+				returnObj['state'] = 'setExpressCheckout';
 			}
 		
-			
+			return serializeJSON(returnObj);
 		</cfscript>
 
-		
-		<cfset result = serializeJSON(webObj)>	
-
-		<cfreturn result>
 	</cffunction>
     
+    
+     <cffunction name="verifyPurchase" access="remote" returntype="any" returnFormat="JSON">
+		<cfargument name="userId" type="string" default="0" required="yes">
+        <cfargument name="itemId" type="string" default="0" required="yes">
+        <cfargument name="transactions" type="any" required="no">
+		
+        <cfscript>
+		var tnx = DeserializeJSON(arguments.transactions,true);
+		var returnObj = StructNew();
+		var transactionId = '0';
+		</cfscript>
+		<cfif isArray(tnx) >
+             <cfloop from="1" to="#ArrayLen(tnx)#" index="i">
+                <cfif tnx[i]['itemId'] eq arguments.itemId>
+                    <cfset transactionId = tnx[i]['transactionId']>
+                    <cfbreak>
+                </cfif>
+            </cfloop>
+        </cfif>
+		
+		<cfscript>
+		try {	
+		
+			if(transactionId neq 0)
+			{
+		
+				data = StructNew();
+				data.method = "GetTransactionDetails";
+				data.transactionid = transactionId;
+		
+				requestData = ec.setGetCheckoutData(request,data);
+				
+				response = caller.doHttppost(requestData);
+				responseStruct = StructNew();
+				responseStruct = caller.getNVPResponse(#URLDecode(response)#);
+				
+				if(identity.getUserId() eq ListGetAt(responseStruct.CUSTOM,1,','))
+				{
+					returnObj['id'] = identity.getUserId();
+					returnObj['success'] = true;
+					returnObj['details'] = responseStruct;
+					returnObj['state'] = 'verifyPurchase';
+				} else {
+					returnObj['id'] = identity.getUserId();
+					returnObj['error'] = 'Not a valid tranaction for this user';
+					returnObj['success'] = true;
+					returnObj['state'] = 'verifyPurchase';
+				}
+			} else {
+				returnObj['success'] = true;
+				returnObj['error'] = 'Item not found in transaction history';
+				returnObj['state'] = 'verifyPurchase';
+			}
+		}
+		
+		catch(any e) 
+		{
+			returnObj['success'] = true;
+			returnObj['error'] = e.message;
+			returnObj['state'] = 'verifyPurchase';
+		}
+		
+		return serializeJSON(returnObj);
+		</cfscript>
+    	
+    </cffunction>
+	
+	
 </cfcomponent>

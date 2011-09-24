@@ -1,6 +1,6 @@
 <cfscript>
 /**
-@dateCreated "July 18, 2011"
+@dateCreated "Sept 18, 2011"
 @hint "You implement methods in Application.cfc to handle ColdFusion application events and set variables in the CFC to configure application characteristics."
 */
 
@@ -8,12 +8,13 @@
 component output="false" {
 	
 	/* **************************** APPLICATION VARIABLES **************************** */
-	THIS.name = "NVP-Sample";
+	THIS.name = "HTML5dg";
 	THIS.applicationTimeout = createTimeSpan(0, 2, 0, 0);
     
     
     customtagpaths = "#getDirectoryFromPath(ExpandPath('lib/'))#";
 	customtagpaths = ListAppend(customtagpaths,"#getDirectoryFromPath(ExpandPath('lib/services/'))#");
+	customtagpaths = ListAppend(customtagpaths,"#getDirectoryFromPath(ExpandPath('/'))#");
 	
 	THIS.customTagPaths = customtagpaths; 
 	
@@ -44,13 +45,7 @@ component output="false" {
    
 		return true;
 	}
-/*
-	public void function onCFCRequest(required string cfcname, required string method, required string args) {
-	
-		return;
-	}
 
-*/
 	public void function onRequestEnd() {
 	
 		return;
@@ -60,68 +55,25 @@ component output="false" {
 	public boolean function onRequestStart(required string TargetPage) {
     
     	request.serverURL = "https://api-3t.sandbox.paypal.com/nvp";
-
-		/* SUBJECT to be uncommented for UNIPAY all the other credentials like API username,
-              password,signature can be commented for UNIPAY
-              To enable Payments for Third Party Email whcih will be passed along with Partner's 3token credentials
-              uncomment both subject and 3 token credentials.
-       */
-       	
-        
-        request.SUBJECT="sdk-three@sdk.com"; 
-       /*
+		
+         /*
         APIuserName = "sdk-three_api1.sdk.com";
         APIPassword = "QFZCWN5HZM8VBG7Q";
         APISignature = "A.d9eRKfd1yVkRrtmMfCFLTqa6M9AyodL0SJkhYztxUi8W9pCXF6.4NI";
   	 	*/
 		
-		 APIuserName = "sidney_1311957058_biz_api1.x.com";
-     	 APIPassword = "1311957099";
-       	 APISignature = "AsWOI0XsYOW6SY4-RFW6nmQX9L2GAx2Dvzlusmnc2lLkNlYS6cilwiEc";
+	  	APIuserName = "sidney_1311957058_biz_api1.x.com";
+	  	APIPassword = "1311957099";
+	   	APISignature = "AsWOI0XsYOW6SY4-RFW6nmQX9L2GAx2Dvzlusmnc2lLkNlYS6cilwiEc";
 		
-		
-		/*
-         request.SUBJECT="clip_1309031681_biz@paypal.com"; 
-       
-        APIuserName = "clip_1309031681_biz_api1.paypal.com";
-        APIPassword = "1309031732";
-        APISignature = "AFcWxV21C7fd0v3bYYYRCpSSRl31An2lFbilAjH412uQjiC0OEJh45pL";
-  	 	*/
+	   	request.UNIPAYSUBJECT=""; 
+	   	request.USER = "#APIuserName#";
+	   	request.PWD = "#APIPassword#";
+	  	request.SIGNATURE = "#APISignature#";
+	   
         
-		//condition to check if it is UNIPAY 
-        if (isdefined("SUBJECT") && (isdefined("APIuserName") eq "false" && isdefined("APIPassword") eq "false" && isdefined("APISignature") eq "false") )
-        {
-            request.UNIPAYSUBJECT="#SUBJECT#"; 
-            request.USER = "";
-            request.PWD = "";
-            request.SIGNATURE = "";
-        }
-        
-      
-    
-        //condition to check if it is Payments for Third Party Email
-        if (isdefined("SUBJECT") && isdefined("APIuserName") && isdefined("APIPassword") && isdefined("APISignature"))
-        {
-            request.UNIPAYSUBJECT="#SUBJECT#"; 
-            request.USER = "#APIuserName#";
-          	request.PWD = "#APIPassword#";
-           	request.SIGNATURE = "#APISignature#";
-        }
-        
-        
-    	//condition to check if it is 3 token credentials 
-        if (isdefined("SUBJECT") eq "false" && isdefined("APIuserName") && isdefined("APIPassword") && isdefined("APISignature") )
-        {
-            request.UNIPAYSUBJECT=""; 
-            request.USER = "#APIuserName#";
-            request.PWD = "#APIPassword#";
-            request.SIGNATURE = "#APISignature#";
-        }
-        
-        
-       /* request.PayPalURL = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=";*/
-		request.PayPalURL = "https://www.sandbox.paypal.com/incontext?useraction=commit&token=";
-        request.version = "65.1";
+       	request.PayPalURL = "https://www.sandbox.paypal.com/incontext?token=";
+       	request.version = "78";
     
    		/*
     	By default the API requests doesn't go through proxy. To route the requests through a proxy server

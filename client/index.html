@@ -4,41 +4,45 @@
 <meta charset="UTF-8">
 <title>jQuery HTML 5 Web App</title>
 <script src="js/jquery-1.6.2.min.js"></script>
-<script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
-<script src ="js/game.js"></script>
-<script src ="js/xconnect.js"></script>
-<link type="text/css" href="css/style.css" rel="stylesheet">
-</head> 
-<body bgcolor="#000"> 
 
-<div id="gameContainer">
-    <!---
-        <canvas id="mainCanvas" width="550" height="400">
+<link type="text/css" href="css/style.css" rel="stylesheet">
+<link type="text/css" href="css/game.css" rel="stylesheet">
+</head> 
+<body > 
+
+<div id="gameContainer" >
+	<canvas id="mainCanvas" width="980" height="700">
         Your browser does not support the canvas element.
-        </canvas>
-        --->
-       <iframe id="gameCanvas" src="http://canvaswars.michaelhall.ca/" 
-       		height="480" width="640" hspace="0" vspace="0" 
-            marginheight="0" marginwidth="0" scrolling="no">
-       </iframe>
-    
+	</canvas>
 </div>
 
+
+<div style="position:absolute;bottom:10px;">
 <br/>
 <button id="sellShield">Offer Sheilds </button>
 OR 
 <button id="sellLaser">Offer Lasers </button>
+OR 
+<button id="verifyShield">Verify Shield</button>
+OR 
+<button id="verifyLaser">Verify Laser</button>
+</div>
 
+
+<script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
+<script src ="js/xconnect.js"></script>
 
 <script>
+
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer');
+xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer','restartGame');
 
 $('#sellShield').live('click',function() {	
 
 	if( !$(".xButtonContainer").is(":visible") )
 	{
-		xconnection.xbutton('123',350,350,100,250);
+		//xconnection.xButton('itemId',top,right,bottom,left,height,width);
+		xconnection.xButton('123',null,null,30,50,100,250);
 		xconnection.xButtonDisplay();
 	}
 });
@@ -46,11 +50,25 @@ $('#sellShield').live('click',function() {
 $('#sellLaser').live('click',function() {	
 	if( !$(".xButtonContainer").is(":visible") )
 	{
-		xconnection.xbutton('456',350,350,100,250);
+		xconnection.xButton('456',100,10,null,null,100,250);
 		xconnection.xButtonDisplay();
 	}
 });
 
+$('#verifyShield').live('click',function() {	
+	xconnection.xVerify('123');
+});
+
+$('#verifyLaser').live('click',function() {	
+	xconnection.xVerify('456');
+});
+
+
+function restartGame()
+{
+	alert('resume game');
+	console.log('Restart the Game Now');
+}
 
 </script>
 </body>

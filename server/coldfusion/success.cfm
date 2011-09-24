@@ -4,11 +4,73 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Thank you</title>
 
+<cfscript>
+	responseStruct = StructNew();
+	returnObj = StructNew();
+	
+	try {
+		
+		// create our objects to call methods on
+		caller = createObject("CallerService");
+		display = createObject("DisplayService");
+		ec = createObject("ExpressCheckout");
+		
+		// DOEXPRESSCHECKOUTPAYMENT
+		data = StructNew();
+		data.method = "DoExpressCheckoutPayment";
+		data.token = url.token;
+		data.amt = url.amt;
+		data.payerid = url.payerid;
+		data.paymentAction = "sale";
+
+		requestData = ec.setGetCheckoutData(request,data);
+		
+		response = caller.doHttppost(requestData);
+		responseStruct = caller.getNVPResponse(#URLDecode(response)#);
+	
+		returnObj['transactionId'] = responseStruct.PAYMENTINFO_0_TRANSACTIONID;
+		returnObj['orderTime'] = responseStruct.PAYMENTINFO_0_ORDERTIME;
+		returnObj['paymentStatus'] = responseStruct.PAYMENTINFO_0_PAYMENTSTATUS;
+		
+		try {	
+		
+			data = StructNew();
+			data.method = "GetTransactionDetails";
+			data.transactionid = responseStruct.PAYMENTINFO_0_TRANSACTIONID;
+	
+			requestData = ec.setGetCheckoutData(request,data);
+			
+			response = caller.doHttppost(requestData);
+			responseStruct = StructNew();
+			responseStruct = caller.getNVPResponse(#URLDecode(response)#);
+			
+			returnObj['itemId'] = ListGetAt(responseStruct.CUSTOM,2,',');
+			
+		}
+		
+		catch(any e) 
+		{
+			writeOutput("Error: " & e.message);
+			writeDump(responseStruct);
+			abort;
+		}
+	
+	}
+
+	catch(any e) 
+	{
+		writeOutput("Error: " & e.message);
+		writeDump(responseStruct);
+		abort;
+	}
+</cfscript>
+
 <script>
 
 function closeFlow() {
-    parent.releaseDG(<cfoutput>#serializeJSON(url)#</cfoutput>);
+    parent.releaseDG(<cfoutput>#serializeJSON(returnObj)#</cfoutput>);
 }
+
 </script>
 </head>
 
