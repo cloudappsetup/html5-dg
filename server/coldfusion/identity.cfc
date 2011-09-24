@@ -1,7 +1,7 @@
 <cfcomponent>
 	<cffunction name="getUserId" access="public" returntype="string">
 		
-		<cfset var result= '567567567'>
+		<cfset var result= '12345'>
 	
     	<cfreturn result>
 	</cffunction>

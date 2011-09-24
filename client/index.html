@@ -13,9 +13,9 @@
 <body > 
 
 
-<button id="sellShield">Offer Sheilds </button>
+<button id="sellShield">Purchase Sheilds </button>
 OR 
-<button id="sellLaser">Offer Lasers </button>
+<button id="sellLaser">Purchase Lasers </button>
 <br><br>
 <button id="verifyShield">Verify Shield</button>
 OR 
@@ -30,40 +30,39 @@ OR
 <script>
 
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc','gameContainer','restartGame');
+xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc','resumeGame');
 
 $('#sellShield').live('click',function() {	
-
-	if( !$(".xButtonContainer").is(":visible") )
-	{
-		//xconnection.xButton('itemId',top,right,bottom,left,height,width);
-		xconnection.xButton('123',null,null,30,50,100,250);
-		xconnection.xButtonDisplay();
-	}
+	xconnection.startPurchase('123','2');
 });
 
 $('#sellLaser').live('click',function() {	
-	if( !$(".xButtonContainer").is(":visible") )
-	{
-		xconnection.xButton('456',100,10,null,null,100,250);
-		xconnection.xButtonDisplay();
-	}
+	xconnection.startPurchase('456','2');
 });
 
+
+
 $('#verifyShield').live('click',function() {	
-	xconnection.xVerify('123');
+	xconnection.xVerify('123',verifiedReleaseDG);
 });
 
 $('#verifyLaser').live('click',function() {	
-	xconnection.xVerify('456');
+	xconnection.xVerify('456','verifiedReleaseDG');
 });
 
 
 // Developer Javascript
-function restartGame()
+function resumeGame()
 {
 	console.log('Restart the Game Now');
 }
+
+verifiedReleaseDG = function(data)
+{
+	console.log(data);
+	console.log('Verified the Purchase');
+}
+
 
 </script>
 </body>

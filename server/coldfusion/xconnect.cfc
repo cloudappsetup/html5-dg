@@ -145,7 +145,7 @@
         
         
 		<cfif isArray(tnx) >
-             <cfloop from="1" to="#(ArrayLen(tnx) -1)#" index="i">
+             <cfloop from="1" to="#ArrayLen(tnx)#" index="i">
                 <cfif tnx[i]['itemId'] eq arguments.itemId>
                     <cfset transactionId = tnx[i]['transactionId']>
                     <cfbreak>
@@ -170,7 +170,7 @@
 				responseStruct = StructNew();
 				responseStruct = caller.getNVPResponse(#URLDecode(response)#);
 				
-				if(identity.getUserId() eq ListGetAt(responseStruct.CUSTOM,1,','))
+				if(identity.getUserId() eq ListGetAt(responseStruct.CUSTOM,1,',') AND arguments.itemId eq ListGetAt(responseStruct.CUSTOM,2,','))
 				{
 					returnObj['id'] = identity.getUserId();
 					returnObj['success'] = true;
