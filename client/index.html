@@ -4,38 +4,33 @@
 <meta charset="UTF-8">
 <title>jQuery HTML 5 Web App</title>
 <script src="js/jquery-1.6.2.min.js"></script>
+<script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
+<script src ="js/xconnect.js"></script>
 
 <link type="text/css" href="css/style.css" rel="stylesheet">
-<link type="text/css" href="css/game.css" rel="stylesheet">
+
 </head> 
 <body > 
 
-<div id="gameContainer" >
-	<canvas id="mainCanvas" width="980" height="700">
-        Your browser does not support the canvas element.
-	</canvas>
-</div>
 
-
-<div style="position:absolute;bottom:10px;">
-<br/>
 <button id="sellShield">Offer Sheilds </button>
 OR 
 <button id="sellLaser">Offer Lasers </button>
-OR 
+<br><br>
 <button id="verifyShield">Verify Shield</button>
 OR 
 <button id="verifyLaser">Verify Laser</button>
+
+<div id="gameContainer" style="height:500px;width:500px;background-color:#0033FF">
+
 </div>
 
 
-<script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
-<script src ="js/xconnect.js"></script>
 
 <script>
 
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/connect.cfc','gameContainer','restartGame');
+xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc','gameContainer','restartGame');
 
 $('#sellShield').live('click',function() {	
 
@@ -64,9 +59,9 @@ $('#verifyLaser').live('click',function() {
 });
 
 
+// Developer Javascript
 function restartGame()
 {
-	alert('resume game');
 	console.log('Restart the Game Now');
 }
 

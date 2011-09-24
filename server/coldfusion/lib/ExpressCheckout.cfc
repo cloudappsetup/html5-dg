@@ -30,26 +30,7 @@ component {
 		
 		for (i=0; i LT itemCnt; i = i+1)
 		{
-			setVariable('qty', 'form.L_QTY' & i);
-			setVariable('amt', 'form.L_AMT' & i);
-			if (isDefined(qty) and isDefined(amt))
-			{
-				itemAmt = itemAmt + (#Evaluate('form.L_QTY' & i)# * #Evaluate('form.L_AMT' & i)#);
-			}
 			
-			setVariable('qty', 'form.L_PAYMENTREQUEST_0_QTY' & i);
-			setVariable('amt', 'form.L_PAYMENTREQUEST_0_AMT' & i);
-			if (isDefined(qty) and isDefined(amt))
-			{
-				itemAmt = itemAmt + (#Evaluate('form.L_PAYMENTREQUEST_0_QTY' & i)# * #Evaluate('form.L_PAYMENTREQUEST_0_AMT' & i)#);
-			}
-			
-			setVariable('qty', 'data.L_QTY' & i);
-			setVariable('amt', 'data.L_AMT' & i);
-			if (isDefined(qty) and isDefined(amt))
-			{
-				itemAmt = itemAmt + (#Evaluate('data.L_QTY' & i)# * #Evaluate('form.L_AMT' & i)#);
-			}
 			
 			setVariable('qty', 'data.L_PAYMENTREQUEST_0_QTY' & i);
 			setVariable('amt', 'data.L_PAYMENTREQUEST_0_AMT' & i);

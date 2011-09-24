@@ -12,7 +12,7 @@ component output="false" {
 		var httpService = new http(); 
 		httpService.setMethod("post"); 
 		httpService.setCharset("utf-8"); 
-		httpService.setUrl(requestData.serverURL); 
+		httpService.setUrl(requestData.SERVERURL); 
 
 		if (requestData.useProxy is "true")
 		{

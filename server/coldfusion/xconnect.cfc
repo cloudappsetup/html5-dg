@@ -2,10 +2,10 @@
 	<cfscript>
 		
 		// create our objects to call methods on
-		caller = createObject("CallerService");
-		ec = createObject("ExpressCheckout");
-		identity = createObject('component','game');
-		inventory = createObject('component','inventory');
+		caller = createObject("component","/html5-dg/server/coldfusion/lib/services/CallerService");
+		ec = createObject("component","/html5-dg/server/coldfusion/lib/ExpressCheckout");
+		identity = createObject('component','/html5-dg/server/coldfusion/identity');
+		inventory = createObject('component','/html5-dg/server/coldfusion/inventory');
 		
 	</cfscript>
 
@@ -46,6 +46,7 @@
 		<cfset var result = "">
         
         <cfscript>
+	
 			var returnObj = StructNew();
 		
 			var itemObj = StructNew();
@@ -135,19 +136,23 @@
         <cfargument name="itemId" type="string" default="0" required="yes">
         <cfargument name="transactions" type="any" required="no">
 		
+        
         <cfscript>
 		var tnx = DeserializeJSON(arguments.transactions,true);
 		var returnObj = StructNew();
 		var transactionId = '0';
 		</cfscript>
+        
+        
 		<cfif isArray(tnx) >
-             <cfloop from="1" to="#ArrayLen(tnx)#" index="i">
+             <cfloop from="1" to="#(ArrayLen(tnx) -1)#" index="i">
                 <cfif tnx[i]['itemId'] eq arguments.itemId>
                     <cfset transactionId = tnx[i]['transactionId']>
                     <cfbreak>
                 </cfif>
             </cfloop>
         </cfif>
+        
 		
 		<cfscript>
 		try {	
@@ -174,11 +179,11 @@
 				} else {
 					returnObj['id'] = identity.getUserId();
 					returnObj['error'] = 'Not a valid tranaction for this user';
-					returnObj['success'] = true;
+					returnObj['success'] = false;
 					returnObj['state'] = 'verifyPurchase';
 				}
 			} else {
-				returnObj['success'] = true;
+				returnObj['success'] = false;
 				returnObj['error'] = 'Item not found in transaction history';
 				returnObj['state'] = 'verifyPurchase';
 			}
@@ -186,13 +191,14 @@
 		
 		catch(any e) 
 		{
-			returnObj['success'] = true;
+			returnObj['success'] = false;
 			returnObj['error'] = e.message;
 			returnObj['state'] = 'verifyPurchase';
 		}
 		
 		return serializeJSON(returnObj);
 		</cfscript>
+	
     	
     </cffunction>
 	

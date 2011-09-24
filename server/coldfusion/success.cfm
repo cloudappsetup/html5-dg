@@ -11,9 +11,9 @@
 	try {
 		
 		// create our objects to call methods on
-		caller = createObject("CallerService");
-		display = createObject("DisplayService");
-		ec = createObject("ExpressCheckout");
+		caller = createObject("component","/html5-dg/server/coldfusion/lib/services/CallerService");
+		ec = createObject("component","/html5-dg/server/coldfusion/lib/ExpressCheckout");
+		display = createObject("/html5-dg/server/coldfusion/lib/services/DisplayService");
 		
 		// DOEXPRESSCHECKOUTPAYMENT
 		data = StructNew();

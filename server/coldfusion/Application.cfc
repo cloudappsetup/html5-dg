@@ -8,7 +8,7 @@
 component output="false" {
 	
 	/* **************************** APPLICATION VARIABLES **************************** */
-	THIS.name = "HTML5dg";
+	THIS.name = "xConnect";
 	THIS.applicationTimeout = createTimeSpan(0, 2, 0, 0);
     
     
@@ -54,7 +54,7 @@ component output="false" {
 	
 	public boolean function onRequestStart(required string TargetPage) {
     
-    	request.serverURL = "https://api-3t.sandbox.paypal.com/nvp";
+    	request.SERVERURL = "https://api-3t.sandbox.paypal.com/nvp";
 		
          /*
         APIuserName = "sdk-three_api1.sdk.com";

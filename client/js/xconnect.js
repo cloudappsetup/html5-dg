@@ -29,7 +29,6 @@ var xconnection = function(url, target) {
 			$('#' + target).append(xC);
 			
 			xconnection.callServer('method=connect',function(data){
-				console.log(data.userId);
 				xconnection.setUserId(data.userId);
 			});
 			
@@ -105,7 +104,7 @@ var xconnection = function(url, target) {
 			'<div class="xButtonAmt"></div>' + 
 			'<label>Quantity:</label><input type="number" min="0" max="10" step="1" value="2" class="xButtonQty">' + 
 			'<div class="xButtonLink">&nbsp;</div></div>').hide().fadeIn(500);
-			console.log(xBC);
+			
 			$('#xContainer').append(xBC);
 			
 			$('#xButtonContainer').width(w);
@@ -146,12 +145,12 @@ var xconnection = function(url, target) {
 				});
 				
 				$('#' +  data.buttonId + ' .xButtonLink').live('click', function() {	
-					console.log(xconnection.getButtonId());
+				
 					var qty = $('#' + xconnection.getButtonId() + ' .xButtonQty').val();
 					var userId = xconnection.getUserId();
 					var data = 'method=setExpressCheckout&itemId=' + this.id + "&qty=" + qty + "&userId=" + userId;
 					xconnection.callServer(data,function(data){
-						console.log(data);
+					
 						if(data.error)
 						{
 							alert('error starting purchase flow');
@@ -171,9 +170,20 @@ var xconnection = function(url, target) {
 			data = localStorage.getItem(userId);
 	
 			xconnection.callServer('method=verifyPurchase&userId=' + userId + '&transactions=' + data + '&itemId=' + itemId,function(data){
-				var obj = $.parseJSON(data);
-				//console.log(data.details['PAYMENTSTATUS']);
-				console.log(data);
+				
+				if(data.success)
+				{
+					console.log(data.details['PAYMENTSTATUS']);
+					alert('payment status: ' + data.details['PAYMENTSTATUS']);
+					//callback with details
+					//Add code here
+					
+					
+				} else {
+					alert('Error: ' + data.error);
+				}
+				
+				
 			});
 			
 		
