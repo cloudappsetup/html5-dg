@@ -68,7 +68,7 @@
 <script>
 
 function closeFlow() {
-    parent.releaseDG(<cfoutput>#serializeJSON(returnObj)#</cfoutput>);
+    parent.xconnection.releaseDG(<cfoutput>#serializeJSON(returnObj)#</cfoutput>);
 }
 
 </script>

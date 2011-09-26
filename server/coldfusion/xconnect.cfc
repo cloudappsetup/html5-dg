@@ -9,7 +9,7 @@
 		
 	</cfscript>
 
-    <cffunction name="connect" access="remote" returntype="any" returnFormat="JSON">
+    <cffunction name="init" access="remote" returntype="any" returnFormat="JSON">
         
         <cfscript>
 			var returnObj = StructNew();
@@ -21,24 +21,9 @@
 		</cfscript>	
 
 	</cffunction>
-    
-    <cffunction name="createButton" access="remote" returntype="any" returnFormat="JSON">
-		<cfargument name="itemId" type="string" required="no">
-        
-       	 <cfscript>
-			var returnObj = StructNew();
-			returnObj = inventory.getItem(arguments.itemId);
-			returnObj['success'] = true;
-			returnObj['buttonId'] = createUUID();
-			returnObj['state'] = 'createButton';
-			
-			return serializeJSON(returnObj);
-		</cfscript>	
 
-	</cffunction>
     
-    
-     <cffunction name="setExpressCheckout" access="remote" returntype="any" returnFormat="JSON">
+     <cffunction name="startPurchase" access="remote" returntype="any" returnFormat="JSON">
 		<cfargument name="userId" type="string" default="0" required="no">
         <cfargument name="itemId" type="string" required="yes">
         <cfargument name="qty" type="string" required="yes">
@@ -114,7 +99,7 @@
 				
 				returnObj['success'] = true;
 				returnObj['redirecturl'] = redirecturl;	
-				returnObj['state'] = 'setExpressCheckout';
+				returnObj['state'] = 'startPurchase';
 				
 			}
 			
@@ -122,7 +107,7 @@
 			{
 				returnObj['success'] = true;
 				returnObj['error'] = e.message;
-				returnObj['state'] = 'setExpressCheckout';
+				returnObj['state'] = 'startPurchase';
 			}
 		
 			return serializeJSON(returnObj);
