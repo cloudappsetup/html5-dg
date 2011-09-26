@@ -38,7 +38,7 @@ var xconnection = function(url) {
 				{
 					alert('error starting purchase flow');
 				} else {
-					startDGFlow(data.redirecturl);
+					xconnection.startDGFlow(data.redirecturl);
 				}
 			});
 			
@@ -49,7 +49,7 @@ var xconnection = function(url) {
 		setUserId: function(newUserId) { userId = newUserId; },
 		getUserId: function() { return userId; },
 		
-		xVerify: function(itemId,verifyCallBack){
+		verifyPurchase: function(itemId,verifyCallBack){
 			var userId = xconnection.getUserId();
 			data = localStorage.getItem(userId);
 			
@@ -60,7 +60,7 @@ var xconnection = function(url) {
 					console.log(data.details['PAYMENTSTATUS']);
 					console.log(data);
 					if(typeof verifyCallBack == 'function'){
-						verifyCallBack.call();
+						verifyCallBack.call(data);
 					}
 					
 				} else {
@@ -71,6 +71,39 @@ var xconnection = function(url) {
 		
 		startDGFlow : function(url) {	
 			dg.startFlow(url);
+		},
+		
+		releaseDG : function(data) {
+		
+			if(data != undefined) {	
+				if(xconnection.check_for_html5_storage)
+				{
+					var dataArray = JSON.parse(localStorage.getItem(xconnection.getUserId()));
+					
+					if(dataArray === null)
+					{
+						var dataArray = new Array();
+						dataArray.push(data);
+					} else {
+						dataArray.push(data);
+					}
+					
+					localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
+					
+					xconnection.getCompleteCallback().call();
+				}
+			}
+			
+			dg.closeFlow();
+			
+		},
+		
+		check_for_html5_storage: function() {
+		  try {
+			return 'localStorage' in window && window['localStorage'] !== null;
+		  } catch (e) {
+			return false;
+		  }
 		},
 		
 		callServer : function(data,callbackFnk){
@@ -90,34 +123,4 @@ var xconnection = function(url) {
 	}
 	
 }();
-
-/*
-function supports_html5_storage() {
-  try {
-    return 'localStorage' in window && window['localStorage'] !== null;
-  } catch (e) {
-    return false;
-  }
-}
-*/
-
-	
-
-function releaseDG(data) {
-	
-	var dataArray = JSON.parse(localStorage.getItem(xconnection.getUserId()));
-	
-	if(dataArray === null)
-	{
-		var dataArray = new Array();
-		dataArray.push(data);
-	} else {
-		dataArray.push(data);
-	}
-	
-	localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
-	
-	dg.closeFlow();
-	
-}
 

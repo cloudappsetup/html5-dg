@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>jQuery HTML 5 Web App</title>
-<script src="js/jquery-1.6.2.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 <script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
 <script src ="js/xconnect.js"></script>
-
-<link type="text/css" href="css/style.css" rel="stylesheet">
 
 </head> 
 <body > 
@@ -21,16 +19,14 @@ OR
 OR 
 <button id="verifyLaser">Verify Laser</button>
 
-<div id="gameContainer" style="height:500px;width:500px;background-color:#0033FF">
-
-</div>
-
 
 
 <script>
 
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc','resumeGame');
+xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc',function() {
+	alert('restart the game');
+});
 
 $('#sellShield').live('click',function() {	
 	xconnection.startPurchase('123','2');
@@ -41,26 +37,18 @@ $('#sellLaser').live('click',function() {
 });
 
 
-
 $('#verifyShield').live('click',function() {	
-	xconnection.xVerify('123',verifiedReleaseDG);
+	xconnection.verifyPurchase('123',function(data) {
+		console.log(data);
+		alert('Sheild Purchase Verified');
+	});
 });
 
 $('#verifyLaser').live('click',function() {	
-	xconnection.xVerify('456','verifiedReleaseDG');
+	xconnection.verifyPurchase('456',function(data) {
+		alert('Laser Purchase Verified');
+	});
 });
-
-
-// Developer Javascript
-resumeGame = function()
-{
-	alert('restart the game');
-}
-
-verifiedReleaseDG = function()
-{
-	alert('Verified the Purchase');
-}
 
 
 </script>
