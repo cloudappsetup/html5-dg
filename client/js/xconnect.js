@@ -58,8 +58,9 @@ var xconnection = function(url) {
 				if(data.success)
 				{
 					console.log(data.details['PAYMENTSTATUS']);
+					console.log(data);
 					if(typeof verifyCallBack == 'function'){
-						verifyCallBack.call(data.details);
+						verifyCallBack.call();
 					}
 					
 				} else {
@@ -68,6 +69,9 @@ var xconnection = function(url) {
 			});
 		},
 		
+		startDGFlow : function(url) {	
+			dg.startFlow(url);
+		},
 		
 		callServer : function(data,callbackFnk){
 			$.ajax({
@@ -97,10 +101,7 @@ function supports_html5_storage() {
 }
 */
 
-startDGFlow = function(url) {	
-	dg.startFlow(url);
-}
-		
+	
 
 function releaseDG(data) {
 	
@@ -117,14 +118,6 @@ function releaseDG(data) {
 	localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
 	
 	dg.closeFlow();
-	
-	$('#' + xconnection.getButtonId()).fadeOut(500, function()
-	{
-		var callbackFnk = xconnection.getCompleteCallback();
-		if(typeof callbackFnk == 'function'){
-			callbackFnk.call();
-		}
-	});
 	
 }
 
