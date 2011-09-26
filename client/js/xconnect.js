@@ -17,7 +17,7 @@ var xconnection = function(url) {
 			this.completeCallBack = completeCallBack;
 			this.userId = 0;
 			
-			xconnection.callServer('method=connect',function(data){
+			xconnection.callServer('method=init',function(data){
 				xconnection.setUserId(data.userId);
 			});
 			
@@ -31,7 +31,7 @@ var xconnection = function(url) {
 		startPurchase: function(itemId,itemQty){
 	
 			var userId = xconnection.getUserId();
-			var data = 'method=setExpressCheckout&itemId=' + itemId + "&qty=" + itemQty + "&userId=" + userId;
+			var data = 'method=startPurchase&itemId=' + itemId + "&qty=" + itemQty + "&userId=" + userId;
 			xconnection.callServer(data,function(data){
 					
 				if(data.error)
