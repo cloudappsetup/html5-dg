@@ -24,16 +24,25 @@ OR
 <script>
 
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc',function() {
-	alert('restart the game');
-});
+xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc');
 
 $('#sellShield').live('click',function() {	
-	xconnection.startPurchase('123','2');
+	xconnection.startPurchase('123','2','888888',
+	function(data) {
+		console.log(data);
+		alert('success restart the game');
+	},
+	function(data) {
+		console.log(data);
+		alert('fail/cancel restart the game');
+	});
 });
 
 $('#sellLaser').live('click',function() {	
-	xconnection.startPurchase('456','2');
+	xconnection.startPurchase('456','2','888888',function(data) {
+		console.log(data);
+		alert('restart the game');
+	});
 });
 
 

@@ -8,22 +8,8 @@
 		inventory = createObject('component','/html5-dg/server/coldfusion/inventory');
 		
 	</cfscript>
-
-    <cffunction name="init" access="remote" returntype="any" returnFormat="JSON">
-        
-        <cfscript>
-			var returnObj = StructNew();
-			returnObj['success'] = true;
-			returnObj['userId'] = identity.getUserId();
-			returnObj['state'] = 'init';
-			
-			return serializeJSON(returnObj);
-		</cfscript>	
-
-	</cffunction>
-
-    
-     <cffunction name="startPurchase" access="remote" returntype="any" returnFormat="JSON">
+ 
+   <cffunction name="startPurchase" access="remote" returntype="any" returnFormat="JSON">
 		<cfargument name="userId" type="string" default="0" required="no">
         <cfargument name="itemId" type="string" required="yes">
         <cfargument name="qty" type="string" required="yes">
@@ -60,13 +46,20 @@
 				FORM.currencyCodeType = "USD";
 			
 				FORM.ITEMCNT = 1;
+				PAYMENTREQUEST_0_SHIPPINGAMT = "0";
+				PAYMENTREQUEST_0_SHIPDISCAMT = "0";
+                PAYMENTREQUEST_0_TAXAMT = "0";
+                PAYMENTREQUEST_0_INSURANCEAMT = "0";
+                PAYMENTREQUEST_0_PAYMENTACTION = "sale";
+                L_PAYMENTTYPE0 = "sale";
 				
-				data.SHIPPINGAMT = "0";
+				/*data.SHIPPINGAMT = "0";
 				data.SHIPDISCAMT = "0";
 				data.TAXAMT = "0";
 				data.INSURANCEAMT = "0";
 				form.paymentAction = "sale";
 				form.paymentType="sale";
+				*/
 				data.PAYMENTREQUEST_0_CUSTOM = arguments.userId & ',' & itemObj.number;
 				
 				// set url info
@@ -75,6 +68,7 @@
 				data.contextPath = GetDirectoryFromPath(#SCRIPT_NAME#);
 				data.protocol = CGI.SERVER_PROTOCOL;
 				data.cancelPage = "cancel.cfm";
+				//data.returnPage = "success.cfm?userId=" & URLEncodedFormat(arguments.userId) & '&itemId=' & URLEncodedFormat(arguments.itemId);
 				data.returnPage = "success.cfm";
 				
 				requestData = ec.setExpressCheckoutData(form,request,data);

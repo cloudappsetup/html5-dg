@@ -9,28 +9,24 @@ data = the query string to call method or pass variables.
 
 
 var xconnection = function(url) {
-	var url, state, userid;
+	var url;
 	
 	return{
-		init: function(url, completeCallBack){
+		init: function(url){
 			this.url = url;
-			this.completeCallBack = completeCallBack;
-			this.userId = 0;
-			
-			xconnection.callServer('method=init',function(data){
-				xconnection.setUserId(data.userId);
-			});
 			
 		},
 		
 		setUrl: function(newUrl) { this.url = newUrl; },
 		getUrl: function() { return this.url; },
-		setCompleteCallback: function(newCompleteCallBack) { this.completeCallBack = newCompleteCallBack; },
-		getCompleteCallback : function() {return this.completeCallBack; },
 		
-		startPurchase: function(itemId,itemQty){
-	
-			var userId = xconnection.getUserId();
+		startPurchase: function(itemId,itemQty,userId,successPurchaseCallBack,failPurchaseCallBack){
+			xconnection.setSuccessPurchaseCallBack(successPurchaseCallBack);
+			xconnection.setFailPurchaseCallBack(failPurchaseCallBack);
+			console.log(xconnection.getFailPurchaseCallBack());
+			console.log(xconnection.getSuccessPurchaseCallBack());
+			xconnection.setUserId(userId);
+			
 			var data = 'method=startPurchase&itemId=' + itemId + "&qty=" + itemQty + "&userId=" + userId;
 			xconnection.callServer(data,function(data){
 					
@@ -43,6 +39,10 @@ var xconnection = function(url) {
 			});
 			
 		},
+		setSuccessPurchaseCallBack: function(newSuccessPurchaseCallBack) { this.successPurchaseCallBack = newSuccessPurchaseCallBack; },
+		getSuccessPurchaseCallBack : function() {return this.successPurchaseCallBack; },
+		setFailPurchaseCallBack: function(newFailPurchaseCallBack) { this.failPurchaseCallBack = newFailPurchaseCallBack; },
+		getFailPurchaseCallBack : function() {return this.failPurchaseCallBack; },
 		
 		setState: function(newState) { state = newState; },
 		getState: function() { return state; },
@@ -90,8 +90,10 @@ var xconnection = function(url) {
 					
 					localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
 					
-					xconnection.getCompleteCallback().call();
+					xconnection.getSuccessPurchaseCallBack().call();
 				}
+			} else {	
+				xconnection.getFailPurchaseCallBack().call();	
 			}
 			
 			dg.closeFlow();
