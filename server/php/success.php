@@ -1,3 +1,7 @@
+<?php
+error_reporting(E_ERROR);
+ini_set('display_errors','On');
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -20,15 +24,17 @@ if ($token){
                          AMT => "1",
                          TOKEN => $token,
                          PAYERID => $payerid,
-                         PAYMENTACTION => "sale");
+                         PAYMENTACTION => "Sale");
     
     $arrPostVals = array_map(create_function('$key, $value', 'return $key."=".$value."&";'), array_keys($postDetails), array_values($postDetails));
-    $postVals = rtrim(implode($arrPostVals), "&");
-    $postVals = "USER=joncle_1313106572_biz_api1.yahoo.com&PWD=1313106611&SIGNATURE=ANaR-mYnO4B1i2mTfRzVmOSN.sl5A14g.6GhzSklnxQeH8jwxB-57XZ2&METHOD=DoExpressCheckoutPayment&VERSION=78&AMT=1&TOKEN=EC-4VT95373AP7445242&PAYERID=CBG5V7V3K5L6E&PAYMENTACTION=Sale";
-        
-    //$response = parseString(runCurl(URLBASE, $postVals));
+    $postVals = rtrim(implode($arrPostVals), "&") ;
     $response = runCurl(URLBASE, $postVals);
-    echo $response;
+    
+    //HACK: On sandbox the first request will fail - we need to wait for 2 seconds and then try again
+    if ($response == false){
+        sleep(2);
+        $response = runCurl(URLBASE, $postVals);
+    }
 } else {
     return "Token not present in query string: please ensure that this request has been called after user has been returned from setCheckout(...) call";
 }
@@ -38,7 +44,7 @@ if ($token){
 
 <script>
 function closeFlow() {
-    parent.xconnection.releaseDG(<cfoutput>#serializeJSON(returnObj)#</cfoutput>);
+    parent.xconnection.releaseDG(<?= json_encode($response); ?>);
 }
 
 </script>
@@ -47,7 +53,6 @@ function closeFlow() {
 <body onload="closeFlow()">
 <div style="background-color:#FFF;height:400px;width:300px; border-radius:8px;padding:20px;">
     Thank you for the purchase!<br />
-    <?= $response ?><br />
     <button id="close" onclick="closeFlow();">close</button>
 </div>
 </body>
