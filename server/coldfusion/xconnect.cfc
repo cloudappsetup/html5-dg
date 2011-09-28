@@ -68,8 +68,7 @@
 				data.contextPath = GetDirectoryFromPath(#SCRIPT_NAME#);
 				data.protocol = CGI.SERVER_PROTOCOL;
 				data.cancelPage = "cancel.cfm";
-				//data.returnPage = "success.cfm?userId=" & URLEncodedFormat(arguments.userId) & '&itemId=' & URLEncodedFormat(arguments.itemId);
-				data.returnPage = "success.cfm";
+				data.returnPage = "success.cfm?userId=" & URLEncodedFormat(arguments.userId) & '&itemId=' & URLEncodedFormat(arguments.itemId);
 				
 				requestData = ec.setExpressCheckoutData(form,request,data);
 				

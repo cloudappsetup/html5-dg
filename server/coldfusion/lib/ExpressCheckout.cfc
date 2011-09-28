@@ -115,7 +115,7 @@ component {
 		result.cancelURL = "http://" & data.serverName & ":" & data.serverPort & data.contextPath & data.cancelPage &"?paymentaction=" & paymentaction;
 		
 		// set return URL
-		result.returnURL = "http://" & data.serverName & ":" & data.serverPort & data.contextPath & data.returnPage & "?amt=#amt#&currencycode=#currencyCodeType#&paymentaction=#paymentaction#";
+		result.returnURL = "http://" & data.serverName & ":" & data.serverPort & data.contextPath & data.returnPage & "&amt=#amt#&currencycode=#currencyCodeType#&paymentaction=#paymentaction#";
 	
 		return result;
 	}

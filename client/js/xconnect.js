@@ -14,7 +14,7 @@ var xconnection = function(url) {
 	return{
 		init: function(url){
 			this.url = url;
-			
+			xconnection.setUserId(0);
 		},
 		
 		setUrl: function(newUrl) { this.url = newUrl; },

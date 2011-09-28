@@ -31,10 +31,10 @@
 		returnObj['transactionId'] = responseStruct.PAYMENTINFO_0_TRANSACTIONID;
 		returnObj['orderTime'] = responseStruct.PAYMENTINFO_0_ORDERTIME;
 		returnObj['paymentStatus'] = responseStruct.PAYMENTINFO_0_PAYMENTSTATUS;
-		//returnObj['itemId'] = url.itemId;
-		//returnObj['userId'] = url.userId;
+		returnObj['itemId'] = url.itemId;
+		returnObj['userId'] = url.userId;
 	
-		
+		/*
 		try {	
 		
 			data = StructNew();
@@ -57,7 +57,7 @@
 			writeDump(responseStruct);
 			abort;
 		}
-		
+		*/
 	
 	}
 
