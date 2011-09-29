@@ -27,7 +27,7 @@ OR
 xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc');
 
 $('#sellShield').live('click',function() {	
-	xconnection.startPurchase('123','2','888888',
+	xconnection.bill('888888','123','2',
 	function(data) {
 		console.log(data);
 		alert('success restart the game');
@@ -39,23 +39,39 @@ $('#sellShield').live('click',function() {
 });
 
 $('#sellLaser').live('click',function() {	
-	xconnection.startPurchase('456','2','888888',function(data) {
+	xconnection.bill('888888','456','2',
+	function(data) {
 		console.log(data);
 		alert('restart the game');
+	},
+	function(data) {
+		console.log(data);
+		alert('fail/cancel restart the game');
 	});
 });
 
 
 $('#verifyShield').live('click',function() {	
-	xconnection.verifyPurchase('123',function(data) {
-		console.log(data);
-		alert('Sheild Purchase Verified');
+	xconnection.verify('888888','123',
+	function() {
+		console.log(xconnection.getVerifyData());
+		alert('Sheild  Verified');
+	},
+	function() {
+		console.log(xconnection.getVerifyData());
+		alert('Laser NOT Verified');
 	});
 });
 
 $('#verifyLaser').live('click',function() {	
-	xconnection.verifyPurchase('456',function(data) {
-		alert('Laser Purchase Verified');
+	xconnection.verify('888888','456',
+	function() {
+		console.log(xconnection.getVerifyData());
+		alert('Laser Verified');
+	},
+	function() {
+		console.log(xconnection.getVerifyData());
+		alert('Laser NOT Verified');
 	});
 });
 

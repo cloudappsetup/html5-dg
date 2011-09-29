@@ -1,5 +1,5 @@
 <cfcomponent>
-	<cffunction name="getItem" access="public" returntype="struct">
+	<cffunction name="getItemDetails" access="public" returntype="struct">
 		<cfargument name="itemId" type="string" required="yes">
         
         <cfscript>
