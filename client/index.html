@@ -5,7 +5,7 @@
 <title>jQuery HTML 5 Web App</title>
 <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 <script src ="https://www.paypalobjects.com/js/external/dg.js"></script>
-<script src ="js/xconnect.js"></script>
+<script src ="js/xconnection.js"></script>
 
 </head> 
 <body > 
@@ -24,7 +24,7 @@ OR
 <script>
 
 // DEVELOPER CODE
-xconnection.init('/html5-dg/server/coldfusion/xconnect.cfc');
+xconnection.init('/html5-dg/server/php/xconnect.php');
 
 $('#sellShield').live('click',function() {	
 	xconnection.bill('888888','123','2',
@@ -59,7 +59,7 @@ $('#verifyShield').live('click',function() {
 	},
 	function() {
 		console.log(xconnection.getVerifyData());
-		alert('Laser NOT Verified');
+		alert('Shield NOT Verified');
 	});
 });
 
