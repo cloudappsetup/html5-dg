@@ -26,8 +26,9 @@ class xconnect{
         return json_encode($returnObj);
     }
     
-    public function startPurchase($itemId, $qty){
+    public function getToken($userId, $itemId, $qty){
         $itemObj = getItem($itemId);
+        $itemObj['qty'] = $qty;
         $dirRoot = sprintf("http://%s%s/", $_SERVER['SERVER_NAME'], dirname($_SERVER['PHP_SELF']));
         
         $postDetails = array(USER => UID,
@@ -54,7 +55,7 @@ class xconnect{
                              PAYMENTREQUEST_0_PAYMENTACTION => "sale",
                              L_PAYMENTTYPE0 => "sale",
                              PAYMENTREQUEST_0_CUSTOM => sprintf("%s,%s", $this->userId, $itemObj['number']),
-                             RETURNURL => "{$dirRoot}success.php",
+                             RETURNURL => "{$dirRoot}success.php?data=" . ($itemObj['qty'] * $itemObj['amt']) . "|$userId|$itemId",
                              CANCELURL => "{$dirRoot}cancel.php");
         
         $arrPostVals = array_map(create_function('$key, $value', 'return $key."=".$value."&";'), array_keys($postDetails), array_values($postDetails));
@@ -64,26 +65,67 @@ class xconnect{
         
         //forward the user to login and accept transaction
         $redirect = sprintf("%s?token=%s", URLREDIRECT, $response["TOKEN"]);
-        //$redirect = sprintf("%s?cmd=_express-checkout&token=%s", URLREDIRECT, $response["TOKEN"]);
         
         $returnObj = array(success => true,
-                           redirecturl => $redirect,
-                           state => "startPurchase");
+                           redirecturl => $redirect);
         
         echo json_encode($returnObj);
     }
     
+    public function commitPayment($userId = 0, $payerId, $token, $amt, $itemId){
+        $returnObj = array();
+        
+        if (verifyUser($userId)){
+            $postDetails = array(USER => UID,
+                                 PWD => PASSWORD,
+                                 SIGNATURE => SIG,
+                                 METHOD => "DoExpressCheckoutPayment",
+                                 VERSION => VER,
+                                 AMT => $amt,
+                                 TOKEN => $token,
+                                 PAYERID => $payerId,
+                                 PAYMENTACTION => "Sale");
+    
+            $arrPostVals = array_map(create_function('$key, $value', 'return $key."=".$value."&";'), array_keys($postDetails), array_values($postDetails));
+            $postVals = rtrim(implode($arrPostVals), "&") ;
+            
+            $response = runCurl(URLBASE, $postVals);
+            
+            //HACK: On sandbox the first request will fail - we need to wait for 2 seconds and then try again
+            if ($response == false){
+                sleep(2);
+                $response = parseString(runCurl(URLBASE, $postVals));
+            } else {
+                $response = parseString($response);
+            }
+            
+            $returnObj['transactionId'] = $response["PAYMENTINFO_0_TRANSACTIONID"];
+			$returnObj['orderTime'] = $response["PAYMENTINFO_0_ORDERTIME"];
+			$returnObj['paymentStatus'] = $response["PAYMENTINFO_0_PAYMENTSTATUS"];
+			$returnObj['itemId'] = $itemId;
+			$returnObj['userId'] = $userId;
+            
+            recordPayment($returnObj);
+        }
+        
+        return json_encode($returnObj);
+    }
+    
+    
     public function verifyPurchase($userId = 0, $itemId = 0, $transactions){
         $arrTransactions = json_decode($transactions);
-        $transactionId = 0;
+        $transactionId = null;
         
-        for ($i = 0; $i < count($arrTransactions); $i++){
-            if ($arrTransactions[$i]['itemId'] == $itemId){
-                $transactionId = $arrTransactions[$i]['transactionId'];
+        $transactions = json_decode(stripslashes($transactions));
+        
+        for ($i = 0; $i < count($transactions); $i++){
+            $transaction = json_decode($transactions[$i]);
+            if ($transaction->itemId == $itemId){
+                $transactionId = $transaction->transactionId;
             }
         }
         
-        if ($transactionId != 0){
+        if ($transactionId){
             $postDetails = array(USER => UID,
                                  PWD => PASSWORD,
                                  SIGNATURE => SIG,
@@ -98,15 +140,17 @@ class xconnect{
             $custom = explode("%2c", $response["CUSTOM"]);
             
             if (getUserId() == $custom[0] && $itemId == $custom[1]){
-                $returnObj = array(id => getUserId(),
-                                   success => true,
-                                   details => $response,
-                                   state => "verifyPurchase");
+                $returnObj = array(success => true,
+                                   error => "",
+                                   transactionId => $response["TRANSACTIONID"],
+                                   orderTime => $response["ORDERTIME"],
+                                   paymentStatus => $response["PAYMENTSTATUS"],
+                                   itemId => $itemId,
+                                   userId => $userId);
             }
         } else {
             $returnObj = array(success => false,
-                               error => "Item not found in transaction history",
-                               state => "verifyPurchase");
+                               error => "Item not found in transaction history");
 		}
         
         echo json_encode($returnObj);
@@ -115,8 +159,11 @@ class xconnect{
 
 $connect = new xconnect();
 
-if ($_GET["method"] == "init"){ echo $connect->init(); }
-if ($_GET["method"] == "startPurchase"){ $connect->startPurchase($_GET["itemId"], $_GET["qty"]); }
-if ($_GET["method"] == "verifyPurchase"){ $connect->verifyPurchase($_GET["userId"], $_GET["itemId"], $_GET["transactions"]); }
+switch($_GET["method"]){
+    case "init": $connect->init(); break;
+    case "getToken": $connect->getToken($_GET["userId"], $_GET["itemId"], $_GET["qty"]); break;
+    case "commitPayment": $connect->commitPayment($_GET["userId"], $_GET["payerId"], $_GET["token"], $_GET["amt"], $_GET["itemId"]); break;
+    case "verifyPayment": $connect->verifyPurchase($_GET["userId"], $_GET["itemId"], $_GET["transactions"]); break;
+}
 ?>
 

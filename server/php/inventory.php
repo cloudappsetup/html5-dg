@@ -1,7 +1,7 @@
 <?php
 function getItem($itemId){
     $items = array(
-        array(name => "Mega Sheilds",
+        array(name => "Mega Shields",
               number => "123",
               qty => "1",
               taxamt => "0",

@@ -9,49 +9,23 @@ ini_set('display_errors','On');
 <title>Thank you</title>
 
 <?php
-require_once("common.php");
+require_once("xconnect.php");
 
-$token = $_GET['token'];
-$payerid = $_GET['PayerID'];
-        
-if ($token){
-    //fetch payee information
-    $postDetails = array(USER => UID,
-                         PWD => PASSWORD,
-                         SIGNATURE => SIG,
-                         METHOD => "DoExpressCheckoutPayment",
-                         VERSION => VER,
-                         AMT => "1",
-                         TOKEN => $token,
-                         PAYERID => $payerid,
-                         PAYMENTACTION => "Sale");
-    
-    $arrPostVals = array_map(create_function('$key, $value', 'return $key."=".$value."&";'), array_keys($postDetails), array_values($postDetails));
-    $postVals = rtrim(implode($arrPostVals), "&") ;
-    $response = runCurl(URLBASE, $postVals);
-    
-    //HACK: On sandbox the first request will fail - we need to wait for 2 seconds and then try again
-    if ($response == false){
-        sleep(2);
-        $response = runCurl(URLBASE, $postVals);
-    }
-} else {
-    return "Token not present in query string: please ensure that this request has been called after user has been returned from setCheckout(...) call";
-}
-
-
+$connect = new xconnect();
+$data = explode("|", $_GET["data"]);
+$returnObj = $connect->commitPayment($data[1], $_GET["PayerID"], $_GET["token"], $data[0], $data[2]);
 ?>
 
 <script>
 function closeFlow() {
-    parent.xconnection.releaseDG(<?= json_encode($response); ?>);
+    parent.xconnection.releaseDG(<?= json_encode($returnObj); ?>);
 }
 
 </script>
 </head>
 
 <body onload="closeFlow()">
-<div style="background-color:#FFF;height:400px;width:300px; border-radius:8px;padding:20px;">
+<div style="background-color:#FFF;height:700px;width:300px; border-radius:8px;padding:20px;">
     Thank you for the purchase!<br />
     <button id="close" onclick="closeFlow();">close</button>
 </div>

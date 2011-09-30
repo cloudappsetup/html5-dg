@@ -1,8 +1,8 @@
 <?php
-define("UID", "ENTER MERCHANT ACCOUNT ID");
-define("PASSWORD", "ENTER MERCHANT PASSWORD");
-define("SIG", "ENTER MERCHANT SIGNATURE");
-define("VER", "ENTER VERSION");
+define("UID", "joncle_1313106572_biz_api1.yahoo.com");
+define("PASSWORD", "1313106611");
+define("SIG", "ANaR-mYnO4B1i2mTfRzVmOSN.sl5A14g.6GhzSklnxQeH8jwxB-57XZ2");
+define("VER", "78");
 define("URLBASE", "https://api-3t.sandbox.paypal.com/nvp");
 define("URLREDIRECT", "https://www.sandbox.paypal.com/incontext");
 
