@@ -3,11 +3,15 @@
 var dg = new PAYPAL.apps.DGFlow({});
 
 var xconnection = function(url) {
+	var languageCenters = {"php": "../server/php/xconnect.php",
+						   "cf": "../server/coldfusion/xconnect.cfc"};
 	var url;
 	
 	return{
-		init: function(url){
-			this.url = url;
+		init: function(language){
+			this.url = (languageCenters['language']) ?
+			       languageCenters['language'].toLowerCase :
+				   languageCenters['php'];
 			xconnection.setUserId(0);
 		},
 		
