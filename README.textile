@@ -1,4 +1,4 @@
-h2. Express Checkout HTML 5 Local Storage and Inventory Management System
+h1. Express Checkout HTML 5 Local Storage and Inventory Management System
 
 The sample code contained in this project is intended to be used to integrate HTML5 local storage capabilities into an in-context express checkout experience.  This project contains several files and directories that are required for integration:
 * index.html - Contains a sample integration of the in-context checkout experience.
@@ -10,7 +10,7 @@ The sample code contained in this project is intended to be used to integrate HT
 * server/[LANGUAGE]/success.[EXTENSION] - The page content to display if the user completes the transaction.
 * server/[LANGUAGE]/xconnect.[EXTENSION] - The server-side functionality for initiating express checkout, verifying purchases and users, and for affecting program flow.
 
-h3. Installation
+h2. Installation
 
 This example requires the following features to be available on a hosted web server:
 * [PHP Installtation] - PHP 5.2.x or above.
@@ -22,7 +22,7 @@ Please follow the proceeding steps for integration:
 * Load *server/[LANGUAGE]/identity.[EXTENSION]* and replace the commented sections within each function with hooks to your product's identity management system.  Sample values are provided.  See the below *Identity File* section for more details.
 * Insert script source includes and calls to bill and verify showcased in index.html.  See the below *Include Code* section for more details.
 
-*Inventory File*
+h3. Inventory File
 Each item to be sold should have its own object within the inventory file.  The makeup of an item object is:
 <notextile>
 <pre>
@@ -39,7 +39,7 @@ array(name =&gt; "PRODUCT NAME",
 
 Implementers should add in a new object entry for each product using this criteria.
 
-*Identity File*
+h3. Identity File
 The identity file contains functions required by the program to verify the identity of the user.  The functions within this file need to be updated with hooks to the identity system of the implementing party.  The following functions will need to be updated:
 
 *verifyUser*
@@ -73,7 +73,7 @@ Arguments:
 * userId (string): The user id that the payment was purchased under.
 * itemId (string): The item id whose data should be returned for.
 
-*Include Code*
+h3. Include Code
 Within your existing code, insert the following to make requests to the checkout experience:
 
 Include the following script source includes on your page:
@@ -104,7 +104,7 @@ xconnection.bill([USERID],[ITEMID],[QUANTITY],
 </pre>
 </notextile>
 
-h3. Code Contributions
+h2. Code Contributions
 
 This project only accepts contributions licensed under the BSD open source license. See the Open Source Initiative's approved template below.<br>
 Each file submitted should contain the following information in the header:<br>
