@@ -23,6 +23,7 @@ Please follow the proceeding steps for integration:
 * Insert script source includes and calls to bill and verify showcased in index.html.  See the below *Include Code* section for more details.
 
 h3. Inventory File
+
 Each item to be sold should have its own object within the inventory file.  The makeup of an item object is:
 <notextile>
 <pre>
@@ -40,6 +41,7 @@ array(name =&gt; "PRODUCT NAME",
 Implementers should add in a new object entry for each product using this criteria.
 
 h3. Identity File
+
 The identity file contains functions required by the program to verify the identity of the user.  The functions within this file need to be updated with hooks to the identity system of the implementing party.  The following functions will need to be updated:
 
 *verifyUser*
@@ -74,6 +76,7 @@ Arguments:
 * itemId (string): The item id whose data should be returned for.
 
 h3. Include Code
+
 Within your existing code, insert the following to make requests to the checkout experience:
 
 Include the following script source includes on your page:
