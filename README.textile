@@ -1,0 +1,139 @@
+h2. Express Checkout HTML 5 Local Storage and Inventory Management System
+
+The sample code contained in this project is intended to be used to integrate HTML5 local storage capabilities into an in-context express checkout experience.  This project contains several files and directories that are required for integration:
+* index.html - Contains a sample integration of the in-context checkout experience.
+* xconnect.js - The core front-end code that initiates bill and verify for all products.
+* server/[LANGUAGE]/cancel.[EXTENSION] - The page content to display if the user cancels the transaction.  
+* server/[LANGUAGE]/common.[EXTENSION] - Common functions and variables used by the application.  Merchants should replace UID, PASSWORD and SIG values with their our merchant values.
+* server/[LANGUAGE]/identity.[EXTENSION] - A series of functions to verify the identity of the user on the merchant's service.  The merchant should replace the content of these functions with their identity verification code.
+* server/[LANGUAGE]/inventory.[EXTENSION] - Contains a fetch method for obtaining the inventory of the merchant.  Merchants should populate the content of their file with their inventory.
+* server/[LANGUAGE]/success.[EXTENSION] - The page content to display if the user completes the transaction.
+* server/[LANGUAGE]/xconnect.[EXTENSION] - The server-side functionality for initiating express checkout, verifying purchases and users, and for affecting program flow.
+
+h3. Installation
+
+This example requires the following features to be available on a hosted web server:
+* [PHP Installtation] - PHP 5.2.x or above.
+
+Please follow the proceeding steps for integration:
+* Download the full source of this example to your web server.
+* Load *server/[LANGUAGE]/common.[EXTENSION]* and replace the entries for UID, PASSWORD, and SIG with your merchant username, password, and signature respectively.
+* Load *server/[LANGUAGE]/inventory.[EXTENSION]* and replace the sample inventory with the inventory of your products.  See the below *Inventroy File* section for more details.
+* Load *server/[LANGUAGE]/identity.[EXTENSION]* and replace the commented sections within each function with hooks to your product's identity management system.  Sample values are provided.  See the below *Identity File* section for more details.
+* Insert script source includes and calls to bill and verify showcased in index.html.  See the below *Include Code* section for more details.
+
+*Inventory File*
+Each item to be sold should have its own object within the inventory file.  The makeup of an item object is:
+array(name =&gt; "PRODUCT NAME",
+      number =&gt; "PRODUCT NUMBER (UNIQUE)",
+      qty =&gt; "PRODUCT QUANTITY",
+      taxamt =&gt; "TAX AMOUNT",
+      amt =&gt; "PURCHASE AMOUNT",
+      desc =&gt; "PRODUCT DESCRIPTION",
+      category =&gt; "PRODUCT CATEGORY"
+)
+
+Implementers should add in a new object entry for each product using this criteria.
+
+*Identity File*
+The identity file contains functions required by the program to verify the identity of the user.  The functions within this file need to be updated with hooks to the identity system of the implementing party.  The following functions will need to be updated:
+
+*verifyUser*
+Description: Verifies a user by ID
+Returns: (boolean) true (valid user) or false (invalid user)
+Arguments:
+* userId (string): The user id to be verififed
+
+*getUserId*
+Description: Returns the user id for the current user
+Returns: (string) The user id   
+Arguments: None
+
+*recordPayment*
+Description: Saves payment data for a given user
+Returns: N/A
+Arguments:  
+* paymentObj (associative array): An object containing all payment data for a given transaction.  Data should be saved by the implementer.
+
+*verifyPayment*
+Description: Verifies existing payment stored via recordPayment call.
+Returns: (boolean) true (payment verified) or false (payment not verified)
+Arguments:
+* userId (string): The user id that the purchase was made under.
+* itemId (string): The purchased item id.
+
+*getPayment*
+Description: Returns stored payment data
+Returns: (associative array) The payment data for a transaction
+Arguments:
+* userId (string): The user id that the payment was purchased under.
+* itemId (string): The item id whose data should be returned for.
+
+*Include Code*
+Within your existing code, insert the following to make requests to the checkout experience:
+
+Include the following script source includes on your page:
+<notextile>
+<pre>
+&lt;script src="game3.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src ="https://www.paypalobjects.com/js/external/dg.js"&gt;&lt;/script&gt;
+&lt;script src ="xconnect.js"&gt;&lt;/script&gt;
+</pre>
+</notextile>
+
+Initialize the calls to bill and verify (verified automatically if already purchased) by doing the following (with replacements where required)
+<notextile>
+<pre>
+&lt;script&gt;
+//change to appropriate language (e.g. php, cf, java)
+xconnection.init('php');
+
+xconnection.bill([USERID],[ITEMID],[QUANTITY],
+    function(data) {
+        //purchase success
+    },
+    function(data) {
+        //purchase cancel
+    }
+);
+&lt;/script&gt;
+</pre>
+</notextile>
+
+h3. Code Contributions
+
+This project only accepts contributions licensed under the BSD open source license. See the Open Source Initiative's approved template below.<br>
+Each file submitted should contain the following information in the header:<br>
+// Created by X.commerce<br>
+// Copyright (c) X.commerce, 2011.  All Rights Reserved.<br> 
+// Licensed under the BSD (revised) open source license.<br>
+
+Below is the Open Source Initiative BSD License Template (http://opensource.org/licenses/bsd-license.php):<br>
+
+Copyright (c) &lt;YEAR&gt;, &lt;OWNER&gt;<br>
+All rights reserved.<br>
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+<br>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+
+
+
+<notextile>
+<pre>
+1.  &lt;script type="text/javascript" src="yql_js_widget.js"&gt;&lt;/script&gt;
+2.  &lt;div id="widgetContainer"&gt;&lt;/div&gt;
+3.  &lt;script type="text/javascript"&gt;
+4.  var config = {'badge':true, 'num_results':10, 'debug':true};
+5.  var format = '&lt;div class="widgetRow"&gt;&lt;a href="{link}" target="_blank"&gt;&lt;div style="background-color:#fff;border:2px solid #8fc5eb;width:20px;height:20px;float:left;margin-right:4px;"&gt;&lt;img src="{loc_iconURL}" width="16" height="16" style="border:0;padding:2px;" /&gt;&lt;/div&gt;&lt;/a&gt; &lt;a href="{link}" target="_blank"&gt;{loc_longForm}&lt;/a&gt;&lt;br /&gt;{lastUpdated}&lt;/div&gt;';
+6.  var yqlQuery = 'select lastUpdated, link, loc_iconURL, loc_longForm, profile_nickname, profile_profileUrl, publishedTime from social.updates where guid=me | sort(field="lastUpdated") | reverse()';
+7.  var insertEl = 'widgetContainer';
+8.  yqlWidget.push(yqlQuery, config, format, insertEl);
+9.  yqlWidget.render();
+10. &lt;/script&gt;
+</pre>
+</notextile>
