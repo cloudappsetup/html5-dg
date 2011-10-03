@@ -24,6 +24,8 @@ Please follow the proceeding steps for integration:
 
 *Inventory File*
 Each item to be sold should have its own object within the inventory file.  The makeup of an item object is:
+<notextile>
+<pre>
 array(name =&gt; "PRODUCT NAME",
       number =&gt; "PRODUCT NUMBER (UNIQUE)",
       qty =&gt; "PRODUCT QUANTITY",
@@ -32,6 +34,8 @@ array(name =&gt; "PRODUCT NAME",
       desc =&gt; "PRODUCT DESCRIPTION",
       category =&gt; "PRODUCT CATEGORY"
 )
+</pre>
+</notextile>
 
 Implementers should add in a new object entry for each product using this criteria.
 
@@ -118,22 +122,3 @@ Redistribution and use in source and binary forms, with or without modification,
 * Neither the name of the <ORGANIZATION> nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 <br>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-
-
-<notextile>
-<pre>
-1.  &lt;script type="text/javascript" src="yql_js_widget.js"&gt;&lt;/script&gt;
-2.  &lt;div id="widgetContainer"&gt;&lt;/div&gt;
-3.  &lt;script type="text/javascript"&gt;
-4.  var config = {'badge':true, 'num_results':10, 'debug':true};
-5.  var format = '&lt;div class="widgetRow"&gt;&lt;a href="{link}" target="_blank"&gt;&lt;div style="background-color:#fff;border:2px solid #8fc5eb;width:20px;height:20px;float:left;margin-right:4px;"&gt;&lt;img src="{loc_iconURL}" width="16" height="16" style="border:0;padding:2px;" /&gt;&lt;/div&gt;&lt;/a&gt; &lt;a href="{link}" target="_blank"&gt;{loc_longForm}&lt;/a&gt;&lt;br /&gt;{lastUpdated}&lt;/div&gt;';
-6.  var yqlQuery = 'select lastUpdated, link, loc_iconURL, loc_longForm, profile_nickname, profile_profileUrl, publishedTime from social.updates where guid=me | sort(field="lastUpdated") | reverse()';
-7.  var insertEl = 'widgetContainer';
-8.  yqlWidget.push(yqlQuery, config, format, insertEl);
-9.  yqlWidget.render();
-10. &lt;/script&gt;
-</pre>
-</notextile>
