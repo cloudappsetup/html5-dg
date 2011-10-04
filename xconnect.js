@@ -26,8 +26,7 @@ var xconnection = function(url) {
 			var data = 'method=getToken&itemId=' + itemId + "&qty=" + itemQty + "&userId=" + userId;
 			xconnection.callServer(data,function(data){
 					
-				if(data.error)
-				{
+				if(data.error){
 					alert('error starting bill flow');
 				} else {
 					xconnection.startDGFlow(data.redirecturl);
@@ -56,19 +55,13 @@ var xconnection = function(url) {
 				
 				xconnection.setVerifyData(data);
 					
-				if(data.success)
-				{
-					
-					if(xconnection.check_for_html5_storage)
-					{
+				if(data.success){
+					if(xconnection.check_for_html5_storage){
 						var dataArray = JSON.parse(localStorage.getItem(xconnection.getUserId()));
 						
-						if(dataArray !== null)
-						{
-							
+						if(dataArray !== null){
 							for (var i = 0; i < dataArray.length; i++) {
-								if(data.transactionId = dataArray[i].transactionId)
-								{
+								if(data.transactionId = dataArray[i].transactionId){
 									dataArray.splice(i,1,data);
 									localStorage.setItem(xconnection.getUserId(), JSON.stringify(dataArray));
 								} 
@@ -95,12 +88,10 @@ var xconnection = function(url) {
 		releaseDG : function(data) {
 		
 			if(data != undefined) {	
-				if(xconnection.check_for_html5_storage)
-				{
+				if(xconnection.check_for_html5_storage){
 					var dataArray = JSON.parse(localStorage.getItem(xconnection.getUserId()));
 					
-					if(dataArray === null)
-					{
+					if(dataArray === null){
 						var dataArray = new Array();
 						dataArray.push(data);
 					} else {
