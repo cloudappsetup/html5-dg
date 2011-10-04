@@ -10,8 +10,8 @@ var xconnection = function(url) {
 	return{
 		init: function(language){
 			this.url = (languageCenters['language']) ?
-			       languageCenters['language'].toLowerCase :
-				   languageCenters['php'];
+			            languageCenters['language'].toLowerCase :
+				        languageCenters['php'];
 			xconnection.setUserId(0);
 		},
 		
