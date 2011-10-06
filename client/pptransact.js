@@ -57,7 +57,7 @@ var pptransact = function(url) {
 					
 				if(data.success){
 					if(pptransact.check_for_html5_storage){
-						var dataArray = JSON.parse(localStorage.getItem(pptransact.getUserId()));
+						var dataArray = $.parseJSON(localStorage.getItem(pptransact.getUserId()));
 						
 						if(dataArray !== null){
 							for (var i = 0; i < dataArray.length; i++) {
@@ -89,7 +89,7 @@ var pptransact = function(url) {
 		
 			if(data != undefined) {	
 				if(pptransact.check_for_html5_storage){
-					var dataArray = JSON.parse(localStorage.getItem(pptransact.getUserId()));
+					var dataArray = $.parseJSON(localStorage.getItem(pptransact.getUserId()));
 					
 					if(dataArray === null){
 						var dataArray = new Array();
