@@ -99,28 +99,33 @@ pptransact.init('php');
 Initialize the call to bill for a purchase by doing the following (with replacements where required)
 <notextile>
 <pre>
-pptransact.bill('[USER ID]','[ITEM ID]','[ITEM QUANTITY]',
-    function(data) {
+pptransact.bill({
+    userId:'[USER ID]',
+    itemId:'[ITEM ID]',
+    itemQty:'[ITEM QUANTITY]',
+    successCallback: function(data){
         //bill success
     },
-    function(data) {
+    failCallback: function(data){
         //bill cancelled 
     }
-);
+});
 </pre>
 </notextile>
 
 Initialize the call to verify purchase by doing the following (with replacements where required)
 <notextile>
 <pre>
-pptransact.verify('[USER ID]','[ITEM ID]',
-    function(data) {
+pptransact.verify({
+    userId:'[USER ID]',
+    itemId:'[ITEM ID]',
+    successCallback: function(data){
         //verify success
     },
-    function(data) {
+    failCallback: function(data){
         //verify failed 
     }
-);
+});
 </pre>
 </notextile>
 

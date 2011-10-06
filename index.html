@@ -12,24 +12,29 @@ pptransact.init('php');
 
 //CALL BILL FUNCTION TO INITIALIZE BILL
 function bill(){
-	pptransact.bill('888888','123','1',
-		function(data) {
+	pptransact.bill({
+		userId:'888888',
+		itemId:'123',
+		itemQty:'1',
+		successCallback: function(data){
 			//bill success
 		},
-		function(data) {
+		failCallback: function(data){
 			//bill cancelled 
 		}
-	);
+	});
 }
 
 function verify(){
-	pptransact.verify('888888','123',
-		function(data) {
+	pptransact.verify({
+		userId:'888888',
+		itemId:'123',
+		successCallback: function(data){
 			//verify success
 		},
-		function(data) {
+		failCallback: function(data){
 			//verify failed 
 		}
-	);
+	});
 }
 </script>

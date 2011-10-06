@@ -18,12 +18,12 @@ var pptransact = function(url) {
 		setUrl: function(newUrl) { this.url = newUrl; },
 		getUrl: function() { return this.url; },
 		
-		bill: function(userId,itemId,itemQty,successBillCallBack,failBillCallBack){
-			pptransact.setUserId(userId);
-			pptransact.setSuccessBillCallBack(successBillCallBack);
-			pptransact.setFailBillCallBack(failBillCallBack);
+		bill: function(inputArgs){
+			pptransact.setUserId(inputArgs.userId);
+			pptransact.setSuccessBillCallBack(inputArgs.successCallback);
+			pptransact.setFailBillCallBack(inputArgs.failCallback);
 			
-			var data = 'method=getToken&itemId=' + itemId + "&qty=" + itemQty + "&userId=" + userId;
+			var data = 'method=getToken&itemId=' + inputArgs.itemId + "&qty=" + inputArgs.itemQty + "&userId=" + inputArgs.userId;
 			pptransact.callServer(data,function(data){
 					
 				if(data.error){
@@ -47,11 +47,11 @@ var pptransact = function(url) {
 		setVerifyData: function(newVerifyData) { verifyData = newVerifyData; },
 		getVerifyData: function() { return verifyData; },
 		
-		verify: function(userId,itemId,successVerifyCallBack,failVerifyCallBack){
-			pptransact.setUserId(userId);
-			data = localStorage.getItem(userId);
+		verify: function(inputArgs){
+			pptransact.setUserId(inputArgs.userId);
+			data = localStorage.getItem(inputArgs.userId);
 			
-			pptransact.callServer('method=verifyPayment&userId=' + userId + '&transactions=' + data + '&itemId=' + itemId,function(data){
+			pptransact.callServer('method=verifyPayment&userId=' + inputArgs.userId + '&transactions=' + data + '&itemId=' + inputArgs.itemId,function(data){
 				
 				pptransact.setVerifyData(data);
 					
@@ -69,13 +69,13 @@ var pptransact = function(url) {
 						}
 					}
 					
-					if(typeof successVerifyCallBack == 'function'){
-						successVerifyCallBack.call();
+					if(typeof inputArgs.successCallback == 'function'){
+						inputArgs.successCallback.call();
 					}
 					
 				} else {
 					if(typeof failVerifyCallBack == 'function'){
-						failVerifyCallBack.call();
+						inputArgs.failCallback.call();
 					}
 				}
 			});
