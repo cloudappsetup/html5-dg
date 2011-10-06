@@ -96,9 +96,9 @@ var pptransact = function(url) {
 						dataArray.push(data);
 					} else {
 						
-						for (var i = 0; i < dataArray.length; i++) {
+						/*for (var i = 0; i < dataArray.length; i++) {
 							console.log(dataArray[i]);
-						}
+						}*/
 				
 						
 						dataArray.push(data);

@@ -1,7 +1,7 @@
 <?php
-define("UID", "YOUR MERCHANT USER ID");
-define("PASSWORD", "YOUR MERCHANT USER PASSWORD");
-define("SIG", "YOUR MERCHANT USER SIGNATURE");
+define("UID", "YOUR MERCHANT ACCOUNT ID");
+define("PASSWORD", "YOUR MERCHANT ACCOUNT PASSWORD");
+define("SIG", "YOUR MERCHANT ACCOUNT SIGNATURE");
 define("VER", "78");
 define("URLBASE", "https://api-3t.sandbox.paypal.com/nvp");
 define("URLREDIRECT", "https://www.sandbox.paypal.com/incontext");

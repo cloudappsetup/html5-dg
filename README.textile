@@ -2,13 +2,13 @@ h1. Express Checkout HTML 5 Local Storage and Inventory Management System
 
 The sample code contained in this project is intended to be used to integrate HTML5 local storage capabilities into an in-context express checkout experience.  This project contains several files and directories that are required for integration:
 * index.html - Contains a sample integration of the in-context checkout experience.
-* xconnect.js - The core front-end code that initiates bill and verify for all products.
+* pptransact.js - The core front-end code that initiates bill and verify for all products.
 * server/[LANGUAGE]/cancel.[EXTENSION] - The page content to display if the user cancels the transaction.  
 * server/[LANGUAGE]/common.[EXTENSION] - Common functions and variables used by the application.  Merchants should replace UID, PASSWORD and SIG values with their our merchant values.
 * server/[LANGUAGE]/identity.[EXTENSION] - A series of functions to verify the identity of the user on the merchant's service.  The merchant should replace the content of these functions with their identity verification code.
 * server/[LANGUAGE]/inventory.[EXTENSION] - Contains a fetch method for obtaining the inventory of the merchant.  Merchants should populate the content of their file with their inventory.
 * server/[LANGUAGE]/success.[EXTENSION] - The page content to display if the user completes the transaction.
-* server/[LANGUAGE]/xconnect.[EXTENSION] - The server-side functionality for initiating express checkout, verifying purchases and users, and for affecting program flow.
+* server/[LANGUAGE]/pptransact.[EXTENSION] - The server-side functionality for initiating express checkout, verifying purchases and users, and for affecting program flow.
 
 h2. Installation
 
@@ -82,28 +82,45 @@ Within your existing code, insert the following to make requests to the checkout
 Include the following script source includes on your page:
 <notextile>
 <pre>
-&lt;script src="game3.js" type="text/javascript"&gt;&lt;/script&gt;
-&lt;script src ="https://www.paypalobjects.com/js/external/dg.js"&gt;&lt;/script&gt;
-&lt;script src ="xconnect.js"&gt;&lt;/script&gt;
+&lt;script src="https://www.paypalobjects.com/js/external/dg.js"&gt;&lt;/script&gt;
+&lt;script src="client/jquery-1.6.2.min.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="client/pptransact.js"&gt;&lt;/script&gt;
 </pre>
 </notextile>
 
-Initialize the calls to bill and verify (verified automatically if already purchased) by doing the following (with replacements where required)
+Initialize the pptransact session by adding the following:
 <notextile>
 <pre>
-&lt;script&gt;
-//change to appropriate language (e.g. php, cf, java)
-xconnection.init('php');
+//INITIALIZE SESSION WITH APPROPRIATE LANGUAGE (php / cf)
+pptransact.init('php');
+</pre>
+</notextile>
 
-xconnection.bill([USERID],[ITEMID],[QUANTITY],
+Initialize the call to bill for a purchase by doing the following (with replacements where required)
+<notextile>
+<pre>
+pptransact.bill('[USER ID]','[ITEM ID]','[ITEM QUANTITY]',
     function(data) {
-        //purchase success
+        //bill success
     },
     function(data) {
-        //purchase cancel
+        //bill cancelled 
     }
 );
-&lt;/script&gt;
+</pre>
+</notextile>
+
+Initialize the call to verify purchase by doing the following (with replacements where required)
+<notextile>
+<pre>
+pptransact.verify('[USER ID]','[ITEM ID]',
+    function(data) {
+        //verify success
+    },
+    function(data) {
+        //verify failed 
+    }
+);
 </pre>
 </notextile>
 
