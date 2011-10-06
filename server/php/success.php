@@ -1,7 +1,3 @@
-<?php
-error_reporting(E_ERROR);
-ini_set('display_errors','On');
-?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -9,16 +5,16 @@ ini_set('display_errors','On');
 <title>Thank you</title>
 
 <?php
-require_once("xconnect.php");
+require_once("pptransact.php");
 
-$connect = new xconnect();
+$transact = new pptransact();
 $data = explode("|", $_GET["data"]);
-$returnObj = $connect->commitPayment($data[1], $_GET["PayerID"], $_GET["token"], $data[0], $data[2]);
+$returnObj = $transact->commitPayment($data[1], $_GET["PayerID"], $_GET["token"], $data[0], $data[2]);
 ?>
 
 <script>
 function closeFlow() {
-    parent.xconnection.releaseDG(<?= json_encode($returnObj); ?>);
+    parent.pptransact.releaseDG(<?= json_encode($returnObj); ?>);
 }
 
 </script>

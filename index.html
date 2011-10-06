@@ -1,22 +1,35 @@
 <!-- INSERT SCRIPT INCLUDES INTO PAGE BODY -->
 <script src="https://www.paypalobjects.com/js/external/dg.js"></script>
 <script src="client/jquery-1.6.2.min.js" type="text/javascript"></script>
-<script src="client/xconnect.js"></script>
+<script src="client/pptransact.js"></script>
+
+<input type="button" onclick="bill()" value="Bill" />
+<input type="button" onclick="verify()" value="Verify" />
 
 <script>
 //INITIALIZE SESSION WITH APPROPRIATE LANGUAGE
-xconnection.init('php');
+pptransact.init('php');
 
 //CALL BILL FUNCTION TO INITIALIZE BILL / VERIFY
 function bill(){
-	xconnection.bill('888888','123','1',
+	pptransact.bill('888888','123','1',
 		function(data) {
-			//bill / verify success
+			//bill success
 		},
 		function(data) {
-			//bill / verify cancelled 
+			//bill cancelled 
 		}
 	);
 }
-bill();
+
+function verify(){
+	pptransact.verify('888888','123',
+		function(data) {
+			//verify success
+		},
+		function(data) {
+			//verify failed 
+		}
+	);
+}
 </script>
