@@ -31,7 +31,7 @@ var pptransact = function(url) {
 				} else {
 					pptransact.startDGFlow(data.redirecturl);
 				}
-			});
+			}, inputArgs.failCallback);
 			
 		},
 		setSuccessBillCallBack: function(newSuccessBillCallBack) { this.successBillCallBack = newSuccessBillCallBack; },
@@ -78,7 +78,7 @@ var pptransact = function(url) {
 						inputArgs.failCallback.call();
 					}
 				}
-			});
+			}, inputArgs.failCallback);
 		},
 		
 		startDGFlow : function(url) {	
@@ -124,7 +124,7 @@ var pptransact = function(url) {
 		  }
 		},
 		
-		callServer : function(data,callbackFnk){
+		callServer : function(data,callbackFnk, failCallback){
 			$.ajax({
 				url: pptransact.getUrl(),
 				data: data,
@@ -134,11 +134,17 @@ var pptransact = function(url) {
 					if(typeof callbackFnk == 'function'){
 						callbackFnk.call(this, obj);
 					}
+				},
+				error: function(request, textStatus, error){
+					failCallback.call(this, {
+						'request': request,
+						'status': textStatus,
+						'error': error
+					});
 				}
 			});	
 		}
 		
 	}
-	
 }();
 
