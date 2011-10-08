@@ -19,11 +19,13 @@ var pptransact = function(url) {
 		getUrl: function() { return this.url; },
 		
 		bill: function(inputArgs){
-			pptransact.setUserId(inputArgs.userId);
+			var userId = encodeURIComponent(inputArgs.userId);
+			
+			pptransact.setUserId(userId);
 			pptransact.setSuccessBillCallBack(inputArgs.successCallback);
 			pptransact.setFailBillCallBack(inputArgs.failCallback);
 			
-			var data = 'method=getToken&itemId=' + inputArgs.itemId + "&qty=" + inputArgs.itemQty + "&userId=" + inputArgs.userId;
+			var data = 'method=getToken&itemId=' + encodeURIComponent(inputArgs.itemId) + "&qty=" + encodeURIComponent(inputArgs.itemQty) + "&userId=" + userId;
 			pptransact.callServer(data,function(data){
 					
 				if(data.error){
@@ -48,10 +50,12 @@ var pptransact = function(url) {
 		getVerifyData: function() { return verifyData; },
 		
 		verify: function(inputArgs){
-			pptransact.setUserId(inputArgs.userId);
-			data = localStorage.getItem(inputArgs.userId);
+			var userId = encodeURIComponent(inputArgs.userId);
 			
-			pptransact.callServer('method=verifyPayment&userId=' + inputArgs.userId + '&transactions=' + data + '&itemId=' + inputArgs.itemId,function(data){
+			pptransact.setUserId(userId);
+			data = localStorage.getItem(userId);
+			
+			pptransact.callServer('method=verifyPayment&userId=' + userId + '&transactions=' + encodeURIComponent(data) + '&itemId=' + encodeURIComponent(inputArgs.itemId),function(data){
 				
 				pptransact.setVerifyData(data);
 					
@@ -124,7 +128,7 @@ var pptransact = function(url) {
 		  }
 		},
 		
-		callServer : function(data,callbackFnk, failCallback){
+		callServer : function(data, callbackFnk, failCallback){
 			$.ajax({
 				url: pptransact.getUrl(),
 				data: data,
