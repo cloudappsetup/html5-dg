@@ -56,10 +56,11 @@ var pptransact = function(url) {
 			data = localStorage.getItem(userId);
 			
 			pptransact.callServer('method=verifyPayment&userId=' + userId + '&transactions=' + encodeURIComponent(data) + '&itemId=' + encodeURIComponent(inputArgs.itemId),function(data){
-				
+				console.log("IN SUCCESS");
 				pptransact.setVerifyData(data);
 					
 				if(data.success){
+					console.log("data.success available");
 					if(pptransact.check_for_html5_storage){
 						var dataArray = $.parseJSON(localStorage.getItem(pptransact.getUserId()));
 						
@@ -73,14 +74,10 @@ var pptransact = function(url) {
 						}
 					}
 					
-					if(typeof inputArgs.successCallback == 'function'){
-						inputArgs.successCallback.call();
-					}
+					inputArgs.successCallback.call();
 					
 				} else {
-					if(typeof failVerifyCallBack == 'function'){
-						inputArgs.failCallback.call();
-					}
+					inputArgs.failCallback.call();
 				}
 			}, inputArgs.failCallback);
 		},
