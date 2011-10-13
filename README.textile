@@ -1,3 +1,5 @@
+h2. The HTML5 DG Toolkit is released as an experimental alpha.  Please file any issues through the Github project.
+
 h1. Express Checkout HTML 5 Local Storage and Inventory Management System
 
 The sample code contained in this project is intended to be used to integrate HTML5 local storage capabilities into an in-context express checkout experience.  This project contains several files and directories that are required for integration:
