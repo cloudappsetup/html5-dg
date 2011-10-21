@@ -64,7 +64,7 @@ class pptransact{
         $response = parseString(runCurl(URLBASE, $postVals));
         
         //forward the user to login and accept transaction
-        $redirect = sprintf("%s?token=%s", URLREDIRECT, $response["TOKEN"]);
+        $redirect = sprintf("%s?token=%s", URLREDIRECT, urldecode($response["TOKEN"]));
         
         $returnObj = array(success => true,
                            redirecturl => $redirect);
