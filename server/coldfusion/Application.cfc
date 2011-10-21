@@ -8,7 +8,7 @@
 component output="false" {
 	
 	/* **************************** APPLICATION VARIABLES **************************** */
-	THIS.name = "xConnect";
+	THIS.name = "pptransact";
 	THIS.applicationTimeout = createTimeSpan(0, 2, 0, 0);
     
     
@@ -53,42 +53,19 @@ component output="false" {
 
 	
 	public boolean function onRequestStart(required string TargetPage) {
-    
-    	request.SERVERURL = "https://api-3t.sandbox.paypal.com/nvp";
 		
-         /*
-        APIuserName = "sdk-three_api1.sdk.com";
-        APIPassword = "QFZCWN5HZM8VBG7Q";
-        APISignature = "A.d9eRKfd1yVkRrtmMfCFLTqa6M9AyodL0SJkhYztxUi8W9pCXF6.4NI";
-  	 	*/
+	  	APIuserName = "joncle_1313106572_biz_api1.yahoo.com";
+	  	APIPassword = "1313106611";
+	   	APISignature = "ANaR-mYnO4B1i2mTfRzVmOSN.sl5A14g.6GhzSklnxQeH8jwxB-57XZ2";
 		
-	  	APIuserName = "sidney_1311957058_biz_api1.x.com";
-	  	APIPassword = "1311957099";
-	   	APISignature = "AsWOI0XsYOW6SY4-RFW6nmQX9L2GAx2Dvzlusmnc2lLkNlYS6cilwiEc";
-		
-	   	request.UNIPAYSUBJECT=""; 
-	   	request.USER = "#APIuserName#";
-	   	request.PWD = "#APIPassword#";
-	  	request.SIGNATURE = "#APISignature#";
+	   	request.UID = "#APIuserName#";
+	   	request.PASSWORD = "#APIPassword#";
+	  	request.SIG = "#APISignature#";
 	   
-        
-       	request.PayPalURL = "https://www.sandbox.paypal.com/incontext?token=";
-       	request.version = "78";
+       	request.VER = "78";
+		request.URLBASE = "https://api-3t.sandbox.paypal.com/nvp";
+		request.URLREDIRECT = "https://www.sandbox.paypal.com/incontext?token=";
     
-   		/*
-    	By default the API requests doesn't go through proxy. To route the requests through a proxy server
-         	set "useProxy" value as "true" and set values for proxyName and proxyPort. Set proxyName with
-        the Host Name or the IP address of the proxy server. proxyPort should be a valid port number.
-        eg: 
-        useProxy = "true";
-        proxyName = "127.0.0.1";
-        proxyPort = "8081";
-        */
-
-        request.useProxy = "false";
-        request.proxyName = "";
-        request.proxyPort = "";
-     
 		return true;
 	}
 

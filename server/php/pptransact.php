@@ -39,7 +39,7 @@ class pptransact{
                              PAYMENTREQUEST_0_CURRENCYCODE => "USD",
                              PAYMENTREQUEST_0_AMT => $itemObj['qty'] * $itemObj['amt'],
                              PAYMENTREQUEST_0_TAXAMT => "0",
-                             PAYMENTREQUEST_0_DESC => "Canvas Wars",
+                             PAYMENTREQUEST_0_DESC => "JS Wars",
                              PAYMENTREQUEST_0_PAYMENTACTION => "Sale",
                              L_PAYMENTREQUEST_0_ITEMCATEGORY0 => $itemObj['category'],
                              L_PAYMENTREQUEST_0_NAME0 => $itemObj['name'],

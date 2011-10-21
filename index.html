@@ -8,7 +8,7 @@
 
 <script>
 //INITIALIZE SESSION WITH APPROPRIATE LANGUAGE
-pptransact.init('php');
+pptransact.init('cf');
 
 //CALL BILL FUNCTION TO INITIALIZE BILL
 function bill(){
@@ -26,13 +26,16 @@ function bill(){
 }
 
 function verify(){
+	console.log('verify');
 	pptransact.verify({
 		userId:'888888',
 		itemId:'123',
 		successCallback: function(data){
+			console.log('verify success');
 			//verify success
 		},
 		failCallback: function(data){
+			console.log('verify failed')
 			//verify failed
 		}
 	});

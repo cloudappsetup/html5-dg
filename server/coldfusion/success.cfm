@@ -10,15 +10,14 @@
 	try {
 		
 		// COMMIT PAYMENT
-		xconnect = createObject("component","/game/server/coldfusion/xconnect");
-		returnObj = xconnect.commitPayment(url.userId,url.payerId,url.token,url.amt,url.itemId);	
+		pptransact = createObject("component","pptransact");
+		returnObj = pptransact.commitPayment(url.userId,url.payerId,url.token,url.amt,url.itemId);	
 	
 	}
 
 	catch(any e) 
 	{
 		writeOutput("Error: " & e.message);
-		writeDump(responseStruct);
 		abort;
 	}
 </cfscript>
@@ -26,7 +25,7 @@
 <script>
 
 function closeFlow() {
-    parent.xconnection.releaseDG(<cfoutput>#returnObj#</cfoutput>);
+    parent.pptransact.releaseDG(<cfoutput>#returnObj#</cfoutput>);
 }
 
 </script>

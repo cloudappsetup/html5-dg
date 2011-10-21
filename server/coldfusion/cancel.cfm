@@ -6,7 +6,7 @@
 <script>
 
 function closeFlow() {
-    parent.xconnection.releaseDG();
+    parent.pptransact.releaseDG();
 }
 </script>
 </head>

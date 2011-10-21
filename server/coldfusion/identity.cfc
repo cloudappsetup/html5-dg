@@ -1,17 +1,17 @@
 <cfcomponent>
 
-	<cffunction name="verifyUser" access="public" returntype="string">
-		<cfargument name="userId" type="string" default="0" required="yes">
-        <cfset var YourSessionUserId = '888888'>	
-            
-    	<cfreturn (arguments.userId eq YourSessionUserId)>
-	</cffunction>
-
 	<cffunction name="getUserId" access="public" returntype="string">
 		
 		<cfset var result= '888888'>
 	
     	<cfreturn result>
+	</cffunction>
+    
+    <cffunction name="verifyUser" access="public" returntype="string">
+		<cfargument name="userId" type="string" default="0" required="yes">
+        <cfset var YourSessionUserId = '888888'>	
+            
+    	<cfreturn (arguments.userId eq YourSessionUserId)>
 	</cffunction>
     
     <cffunction name="recordPayment" access="public" returntype="string">

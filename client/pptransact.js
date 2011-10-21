@@ -4,13 +4,14 @@ var dg = new PAYPAL.apps.DGFlow({});
 
 var pptransact = function(url) {
 	var languageCenters = {"php": "server/php/pptransact.php",
-						   "cf": "server/coldfusion/xconnect.cfc"};
+						   "cf": "server/coldfusion/pptransact.cfc"};
 	var url;
 	
 	return{
 		init: function(language){
-			this.url = (languageCenters['language']) ?
-			            languageCenters['language'].toLowerCase :
+			
+			this.url = (languageCenters[language.toLowerCase()]) ?
+			            languageCenters[language.toLowerCase()]:
 				        languageCenters['php'];
 			pptransact.setUserId(0);
 		},
