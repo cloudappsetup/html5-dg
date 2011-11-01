@@ -42,11 +42,14 @@ array(name =&gt; "PRODUCT NAME",
 </notextile>
 [Java Version]
 Each item to be sold should have its own object. Its initialized in inventory.jsp file. The makeup of an item object is:
+<notextile>
+<pre>
 	HashMap<String, inventoryItem> temp = new HashMap<String, inventoryItem>();
 	temp.put("PRODUCT NUMBER (UNIQUE)", new inventoryItem("PRODUCT NAME", "PRODUCT NUMBER (UNIQUE)", "PRODUCT QUANTITY", "TAX AMOUNT", "PURCHASE AMOUNT",
 			"PRODUCT DESCRIPTION", "PRODUCT CATEGORY"));
 	setInventoryMap(temp);
-	
+</pre>
+</notextile>	
 
 Implementers should add in a new object entry for each product using this criteria.
 
