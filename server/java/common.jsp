@@ -1,4 +1,3 @@
-
 <%
 	/*==================================================================
 	 PayPal Express Checkout Module
@@ -18,9 +17,9 @@
 
 <%
 	
-	gv_APIUserName = "divya._1314818417_biz_api1.gmail.com";
-	gv_APIPassword = "1314818454";
-	gv_APISignature = "A8XZ4ZLM7.xolRI9MNC.KDBxc8-AAuf4X211fbHgYRE2r7rRUXRYj1Bm";
+	gv_APIUserName = "YOUR API USERNAME";
+	gv_APIPassword = "PASSWORD";
+	gv_APISignature = "SIGNATURE";
 
 	//BN Code is only applicable for partners
 	gv_BNCode = "PP-ECWizard";
