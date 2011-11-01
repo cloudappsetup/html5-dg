@@ -40,6 +40,13 @@ array(name =&gt; "PRODUCT NAME",
 )
 </pre>
 </notextile>
+[Java Version]
+Each item to be sold should have its own object. Its initialized in inventory.jsp file. The makeup of an item object is:
+	HashMap<String, inventoryItem> temp = new HashMap<String, inventoryItem>();
+	temp.put("PRODUCT NUMBER (UNIQUE)", new inventoryItem("PRODUCT NAME", "PRODUCT NUMBER (UNIQUE)", "PRODUCT QUANTITY", "TAX AMOUNT", "PURCHASE AMOUNT",
+			"PRODUCT DESCRIPTION", "PRODUCT CATEGORY"));
+	setInventoryMap(temp);
+	
 
 Implementers should add in a new object entry for each product using this criteria.
 
@@ -94,8 +101,9 @@ Include the following script source includes on your page:
 Initialize the pptransact session by adding the following:
 <notextile>
 <pre>
-//INITIALIZE SESSION WITH APPROPRIATE LANGUAGE (php / cf)
-pptransact.init('php');
+//INITIALIZE SESSION WITH APPROPRIATE LANGUAGE (php / cf / java)
+pptransact.init('php'); or
+pptransact.init('java'); 
 </pre>
 </notextile>
 
