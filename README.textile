@@ -16,6 +16,7 @@ h2. Installation
 
 This example requires the following features to be available on a hosted web server:
 * [PHP Installtation] - PHP 5.2.x or above.
+* [Java Version] - Install Apache Tomcat. Download JSON-lib-jdk Jar file (json-lib-2.2.2-jdk15.jar). Add the tomcat/lib jars and json jar to the project.
 
 Please follow the proceeding steps for integration:
 * Download the full source of this example to your web server.
