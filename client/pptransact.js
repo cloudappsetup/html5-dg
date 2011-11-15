@@ -4,6 +4,7 @@ var dg = new PAYPAL.apps.DGFlow({});
 
 var pptransact = function(url) {
 	var languageCenters = {"php": "server/php/pptransact.php",
+	                       "py": "server/python/pptransact.py",
 						   "cf": "server/coldfusion/pptransact.cfc",
 						   "java": "server/java/pptransact.jsp"};
 	var url;
@@ -56,9 +57,9 @@ var pptransact = function(url) {
 			
 			pptransact.setUserId(userId);
 			data = localStorage.getItem(userId);
+			data = data.replace(/\\/g, "");
 			
 			pptransact.callServer('method=verifyPayment&userId=' + userId + '&transactions=' + encodeURIComponent(data) + '&itemId=' + encodeURIComponent(inputArgs.itemId),function(data){
-				
 				pptransact.setVerifyData(data);
 					
 				if(data.success){

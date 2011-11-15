@@ -107,7 +107,6 @@ class pptransact{
             
             recordPayment($returnObj);
         }
-        
         return json_encode($returnObj);
     }
     
